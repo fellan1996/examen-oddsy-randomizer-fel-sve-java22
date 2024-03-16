@@ -11,10 +11,16 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
+    "@mui/icons-material": "^5.15.10",
     "@mui/material": "latest",
+    "@mui/x-charts": "^6.19.4",
+    "firebase": "^10.8.0",
     "react": "latest",
     "react-dom": "latest",
     "react-scripts": "latest"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "latest"
   },
   "browserslist": {
     "production": [
