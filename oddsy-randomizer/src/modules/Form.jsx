@@ -6,8 +6,8 @@ import {
   doc,
   updateDoc,
   getDoc,
+  getDocs,
 } from "@firebase/firestore";
-import { useTheme } from "@mui/material/styles";
 import Title from "./Title";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FormControl from "@mui/material/FormControl";
@@ -19,18 +19,21 @@ import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 
 export default function Form() {
-  const theme = useTheme();
-  const [selectedCandidate, setSelectedCandidate] = useState('');
+  const [selectedCandidate, setSelectedCandidate] = useState("");
   const [votesToBeAdded, setVotesToBeAdded] = useState(0);
   const [currentVotes, setCurrentVotes] = useState(0);
-  let docRef;
+  const [currentCandidates, setCurrentCandidates] = useState([]);
+  //skapa state som innehåller alla candidates.
+  let docRefVotes;
+  let docRefCandidates;
 
   const updateCurrentVotes = async () => {
     try {
-      const docSnap = await getDoc(docRef);
+      const docSnap = await getDoc(docRefVotes);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        setCurrentVotes(parseInt(data.votes));
+
+        setCurrentVotes(parseInt(data.votes)); // Updating the currentVotes state
         console.log(
           "current votes for " + selectedCandidate + ": " + data.votes
         );
@@ -42,28 +45,53 @@ export default function Form() {
     }
   };
 
+  const updateCurrentCandidates = async () => {
+    const candidatesNames = [];
+    try {
+      console.log(docRefCandidates);
+      const documents = await getDocs(docRefCandidates);
+      documents.forEach((doc) => {
+        candidatesNames.push(doc.id);
+      });
+      console.log(candidatesNames);
+      setCurrentCandidates(candidatesNames); // updating the currentCandidates state
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     if (selectedCandidate) {
-      docRef = doc(db, "candidates", selectedCandidate);
+      docRefVotes = doc(db, "candidates", selectedCandidate);
       updateCurrentVotes();
     }
   }, [selectedCandidate]);
+
+  useEffect(() => {
+    docRefCandidates = collection(db, "candidates");
+    updateCurrentCandidates();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newTotal = parseInt(currentVotes) + parseInt(votesToBeAdded);
     try {
-      docRef = doc(db, "candidates", selectedCandidate);
-      await updateDoc(docRef, {
+      docRefVotes = doc(db, "candidates", selectedCandidate);
+      await updateDoc(docRefVotes, {
         votes: newTotal,
       });
     } catch (e) {
       console.log(e);
     }
-    docRef = doc(db, "candidates", selectedCandidate);
+    docRefVotes = doc(db, "candidates", selectedCandidate);
     updateCurrentVotes();
   };
+
+  const handleSubmitNewCandidate = async (e) => {
+    e.preventDefault();
+    updateCurrentCandidates();
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -100,9 +128,12 @@ export default function Form() {
               sx={{ minWidth: 150 }}
               size="small"
             >
-              <MenuItem value={"Berlin"}>Berlin</MenuItem>
-              <MenuItem value={"Stockholm"}>Stockholm</MenuItem>
-              <MenuItem value={"Moscow"}>Moscow</MenuItem>
+              {currentCandidates.map((candidate) => (
+                <MenuItem key={candidate} value={candidate}>
+                  {candidate}
+                </MenuItem>
+              ))}
+
             </Select>
           </Box>
           <TextField
