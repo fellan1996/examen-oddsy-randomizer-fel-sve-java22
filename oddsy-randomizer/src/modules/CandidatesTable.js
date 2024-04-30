@@ -36,7 +36,7 @@ export default function Orders({ candidatesData, deleteCandidate }) {
         </TableHead>
         <TableBody>
           {candidatesData.map((candidate, index) => (
-            <TableRow key={candidate}>
+            <TableRow key={candidate.name}>
               <TableCell>{index+1}</TableCell>
               <TableCell>temporary</TableCell>
               <TableCell>{candidate.name}</TableCell>

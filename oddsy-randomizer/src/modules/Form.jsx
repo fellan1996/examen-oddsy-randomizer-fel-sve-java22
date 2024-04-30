@@ -21,78 +21,8 @@ import Select from "@mui/material/Select";
 export default function Form({ currentCandidates, handleSubmitNewVotes }) {
   const [selectedCandidate, setSelectedCandidate] = useState("");
   const [votesToBeAdded, setVotesToBeAdded] = useState(0);
-  const [selectedCandidateCurrentVotes, setSelectedCandidateCurrentVotes] = useState(0);
 
   //skapa state som innehåller alla candidates.
-  let docRefVotes;
-  let docRefCandidates;
-
-  const updateselectedCandidateCurrentVotes = async () => {
-    try {
-      const docSnap = await getDoc(docRefVotes);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-
-        setSelectedCandidateCurrentVotes(parseInt(data.votes)); // Updating the selectedCandidateCurrentVotes state
-        console.log(
-          "current votes for " + selectedCandidate + ": " + data.votes
-        );
-      } else {
-        console.log("No such document!");
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const updateCurrentCandidates = async () => {
-    const candidatesNames = [];
-    try {
-      console.log(docRefCandidates);
-      const documents = await getDocs(docRefCandidates);
-      documents.forEach((doc) => {
-        candidatesNames.push(doc.id);
-      });
-      console.log(candidatesNames);
-      setCurrentCandidates(candidatesNames); // updating the currentCandidates state
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedCandidate) {
-      docRefVotes = doc(db, "candidates", selectedCandidate);
-      updateselectedCandidateCurrentVotes();
-    }
-  }, [selectedCandidate]);
-
-  useEffect(() => {
-    docRefCandidates = collection(db, "candidates");
-    updateCurrentCandidates();
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const newTotal = parseInt(selectedCandidateCurrentVotes) + parseInt(votesToBeAdded);
-    try {
-      docRefVotes = doc(db, "candidates", selectedCandidate);
-      await updateDoc(docRefVotes, {
-        votes: newTotal,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    docRefVotes = doc(db, "candidates", selectedCandidate);
-    updateselectedCandidateCurrentVotes();
-    handleSubmitNewVotes(selectedCandidate, votesToBeAdded);
-  };
-
-  const handleSubmitNewCandidate = async (e) => {
-    e.preventDefault();
-    updateCurrentCandidates();
-  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -107,7 +37,12 @@ export default function Form({ currentCandidates, handleSubmitNewVotes }) {
           New Candidate
         </Button>
       </Box>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleSubmitNewVotes(selectedCandidate, votesToBeAdded);
+        }}
+      >
         <FormControl
           fullWidth
           sx={{
@@ -125,16 +60,16 @@ export default function Form({ currentCandidates, handleSubmitNewVotes }) {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="Candidate"
+              value={selectedCandidate}
               onChange={(e) => setSelectedCandidate(e.target.value)}
               sx={{ minWidth: 150 }}
               size="small"
             >
-              {currentCandidates.map(({name}) => (
+              {currentCandidates.map(({ name }) => (
                 <MenuItem key={name} value={name}>
                   {name}
                 </MenuItem>
               ))}
-
             </Select>
           </Box>
           <TextField

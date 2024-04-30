@@ -58,10 +58,23 @@ export default function App() {
       console.log(e);
     }
   };
-  const handleSubmitNewVotes = (selectedCandidate, addedVotes) => {
+  const handleSubmitNewVotes = async (selectedCandidateName, addedVotes) => {
+    const selectedCandidateObj = candidatesData.find(candidateData => candidateData.name === selectedCandidateName);
+    const newTotal = selectedCandidateObj.votes + parseInt(addedVotes);
+    console.log(selectedCandidateName)
+    
+    try {
+      const docRefVotes = doc(db, "candidates", selectedCandidateName);
+      await updateDoc(docRefVotes, {
+        votes: newTotal,
+      });
+    } catch (e) {
+      console.log(e);
+    }
     updateCandidatesData();
+
     const tempHistory = history;
-    tempHistory.unshift(`${addedVotes} votes added to ${selectedCandidate}`);
+    tempHistory.unshift(`${addedVotes} votes added to ${selectedCandidateName}`);
     setHistory(tempHistory);
   };
 
