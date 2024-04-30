@@ -18,22 +18,22 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 
-export default function Form() {
+export default function Form({ currentCandidates, handleSubmitNewVotes }) {
   const [selectedCandidate, setSelectedCandidate] = useState("");
   const [votesToBeAdded, setVotesToBeAdded] = useState(0);
-  const [currentVotes, setCurrentVotes] = useState(0);
-  const [currentCandidates, setCurrentCandidates] = useState([]);
+  const [selectedCandidateCurrentVotes, setSelectedCandidateCurrentVotes] = useState(0);
+
   //skapa state som innehåller alla candidates.
   let docRefVotes;
   let docRefCandidates;
 
-  const updateCurrentVotes = async () => {
+  const updateselectedCandidateCurrentVotes = async () => {
     try {
       const docSnap = await getDoc(docRefVotes);
       if (docSnap.exists()) {
         const data = docSnap.data();
 
-        setCurrentVotes(parseInt(data.votes)); // Updating the currentVotes state
+        setSelectedCandidateCurrentVotes(parseInt(data.votes)); // Updating the selectedCandidateCurrentVotes state
         console.log(
           "current votes for " + selectedCandidate + ": " + data.votes
         );
@@ -63,7 +63,7 @@ export default function Form() {
   useEffect(() => {
     if (selectedCandidate) {
       docRefVotes = doc(db, "candidates", selectedCandidate);
-      updateCurrentVotes();
+      updateselectedCandidateCurrentVotes();
     }
   }, [selectedCandidate]);
 
@@ -75,7 +75,7 @@ export default function Form() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newTotal = parseInt(currentVotes) + parseInt(votesToBeAdded);
+    const newTotal = parseInt(selectedCandidateCurrentVotes) + parseInt(votesToBeAdded);
     try {
       docRefVotes = doc(db, "candidates", selectedCandidate);
       await updateDoc(docRefVotes, {
@@ -85,7 +85,8 @@ export default function Form() {
       console.log(e);
     }
     docRefVotes = doc(db, "candidates", selectedCandidate);
-    updateCurrentVotes();
+    updateselectedCandidateCurrentVotes();
+    handleSubmitNewVotes();
   };
 
   const handleSubmitNewCandidate = async (e) => {
