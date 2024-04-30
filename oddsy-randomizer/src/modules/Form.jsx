@@ -86,7 +86,7 @@ export default function Form({ currentCandidates, handleSubmitNewVotes }) {
     }
     docRefVotes = doc(db, "candidates", selectedCandidate);
     updateselectedCandidateCurrentVotes();
-    handleSubmitNewVotes();
+    handleSubmitNewVotes(selectedCandidate, votesToBeAdded);
   };
 
   const handleSubmitNewCandidate = async (e) => {
@@ -129,9 +129,9 @@ export default function Form({ currentCandidates, handleSubmitNewVotes }) {
               sx={{ minWidth: 150 }}
               size="small"
             >
-              {currentCandidates.map((candidate) => (
-                <MenuItem key={candidate} value={candidate}>
-                  {candidate}
+              {currentCandidates.map(({name}) => (
+                <MenuItem key={name} value={name}>
+                  {name}
                 </MenuItem>
               ))}
 

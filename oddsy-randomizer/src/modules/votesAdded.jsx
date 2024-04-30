@@ -1,13 +1,14 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Title from './Title.js';
+import { Label } from '@mui/icons-material';
 
 
 function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function Deposits({ totalVotes }) {
+export default function Deposits({ totalVotes, history }) {
 
 
 
@@ -20,9 +21,14 @@ export default function Deposits({ totalVotes }) {
       <Typography component="p" variant="h6">
         History: 
       </Typography>
-      <Typography color="text.secondary" sx={{ flex: 1 }}>
-        2 votes to Copenhagen
-      </Typography>
+      {history[0] && 
+        <Typography color="text.secondary" sx={{ flex: 1 }}>
+          {history[0]}
+        </Typography>
+      }
+      {history[1] && <Typography color="text.secondary" sx={{ flex: 1 }}>
+        {history[1]}
+      </Typography>}
     </React.Fragment>
   );
 }

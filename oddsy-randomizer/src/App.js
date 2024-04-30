@@ -13,6 +13,7 @@ import {
   updateDoc,
   getDoc,
   getDocs,
+  deleteDoc
 } from "@firebase/firestore";
 
 function Copyright() {
@@ -30,55 +31,54 @@ function Copyright() {
 
 export default function App() {
   const [totalVotes, setTotalVotes] = React.useState(0);
-  const [currentCandidates, setCurrentCandidates] = React.useState([]);
+  const [candidatesData, setCandidatesData] = React.useState([]);
+  const [history, setHistory] = React.useState([]);
   
 
-  const getTotalVotes = async () => {
-    const docRefCandidates = collection(db, "candidates");
-    try {
-
-      const documents = await getDocs(docRefCandidates);
-      console.log(documents);
-      let votes = 0;
-      documents.forEach(doc => 
-        votes += doc.data().votes
+  const updateTotalVotes = (tempCandidatesData) => {
+      let sumOfVotes = 0;
+      tempCandidatesData.forEach(({votes}) => 
+      sumOfVotes += votes
       );
-      setTotalVotes(votes);
-      console.log(totalVotes);
-    } catch (e) {
-      console.log(e);
-    }
+      setTotalVotes(sumOfVotes);
   };
 
-  const updateCurrentCandidates = async () => {
+  const updateCandidatesData = async () => {
     const docRefCandidates = collection(db, "candidates");
-    const candidatesNames = [];
+    const tempCandidatesData = [];
     try {
       console.log(docRefCandidates);
       const documents = await getDocs(docRefCandidates);
       documents.forEach((doc) => {
-        candidatesNames.push(doc.id);
+        tempCandidatesData.push({name: doc.id, votes: doc.data().votes});
       });
-      console.log(candidatesNames);
-      setCurrentCandidates(candidatesNames); // updating the currentCandidates state
+      setCandidatesData(tempCandidatesData.sort((a, b) => b.votes - a.votes)); // updating the candidatesData state
+      updateTotalVotes(tempCandidatesData);
     } catch (e) {
       console.log(e);
     }
   };
-  const handleSubmitNewVotes = () => {
-    getTotalVotes();
+  const handleSubmitNewVotes = (selectedCandidate, addedVotes) => {
+    updateCandidatesData();
+    const tempHistory = history;
+    tempHistory.unshift(`${addedVotes} votes added to ${selectedCandidate}`);
+    setHistory(tempHistory);
   };
 
+  async function handleDeleteCandidate(candidate) {
+    await deleteDoc(doc(db, "candidates", candidate))
+    await updateCandidatesData();
+    console.log(`${candidate} has been deleted`);
+  }
+
+
   React.useEffect(() => {
-    getTotalVotes();
-  }, []);
-  React.useEffect(() => {
-    updateCurrentCandidates();
+    updateCandidatesData();
   }, []);
 
   return (
       <Box>
-      <Dashboard totalVotes={totalVotes} currentCandidates={currentCandidates} handleSubmitNewVotes={handleSubmitNewVotes}/>
+      <Dashboard totalVotes={totalVotes} candidatesData={candidatesData} history={history} handleSubmitNewVotes={handleSubmitNewVotes} deleteCandidate={handleDeleteCandidate} />
       </Box>
   );
 }

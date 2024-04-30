@@ -19,8 +19,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import Form from './Form';
-import Deposits from './Deposits';
-import Orders from './Orders';
+import Deposits from './votesAdded';
+import Orders from './CandidatesTable';
 
 function Copyright(props) {
   return (
@@ -84,7 +84,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Dashboard({ totalVotes, currentCandidates, handleSubmitNewVotes }) {
+export default function Dashboard({ totalVotes, candidatesData, handleSubmitNewVotes, history, deleteCandidate }) {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -173,7 +173,7 @@ export default function Dashboard({ totalVotes, currentCandidates, handleSubmitN
                     height: 240,
                   }}
                 >
-                  <Form currentCandidates={currentCandidates} handleSubmitNewVotes={handleSubmitNewVotes}/>
+                  <Form currentCandidates={candidatesData} handleSubmitNewVotes={handleSubmitNewVotes}/>
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
@@ -186,13 +186,13 @@ export default function Dashboard({ totalVotes, currentCandidates, handleSubmitN
                     height: 240,
                   }}
                 >
-                  <Deposits totalVotes={totalVotes} />
+                  <Deposits totalVotes={totalVotes} history={history} />
                 </Paper>
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
+                  <Orders candidatesData={candidatesData} deleteCandidate={deleteCandidate} />
                 </Paper>
               </Grid>
             </Grid>
