@@ -1,13 +1,4 @@
 import { useEffect, useState } from "react";
-import { db } from "../firebase.js";
-import {
-  addDoc,
-  collection,
-  doc,
-  updateDoc,
-  getDoc,
-  getDocs,
-} from "@firebase/firestore";
 import Title from "./Title";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FormControl from "@mui/material/FormControl";
@@ -18,11 +9,9 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 
-export default function Form({ currentCandidates, handleSubmitNewVotes }) {
+export default function Form({ currentCandidates, handleSubmitNewVotes, openNewCandidateModal }) {
   const [selectedCandidate, setSelectedCandidate] = useState("");
   const [votesToBeAdded, setVotesToBeAdded] = useState(0);
-
-  //skapa state som innehåller alla candidates.
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -33,6 +22,7 @@ export default function Form({ currentCandidates, handleSubmitNewVotes }) {
           variant="outlined"
           size="small"
           endIcon={<AddRoundedIcon fontSize="small" />}
+          onClick={openNewCandidateModal}
         >
           New Candidate
         </Button>

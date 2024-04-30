@@ -1,9 +1,7 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import ProTip from './ProTip';
 import Dashboard from './modules/Dashboard.js';
 import { db } from "./firebase.js";
 import {
@@ -11,7 +9,6 @@ import {
   collection,
   doc,
   updateDoc,
-  getDoc,
   getDocs,
   deleteDoc
 } from "@firebase/firestore";
@@ -61,7 +58,6 @@ export default function App() {
   const handleSubmitNewVotes = async (selectedCandidateName, addedVotes) => {
     const selectedCandidateObj = candidatesData.find(candidateData => candidateData.name === selectedCandidateName);
     const newTotal = selectedCandidateObj.votes + parseInt(addedVotes);
-    console.log(selectedCandidateName)
     
     try {
       const docRefVotes = doc(db, "candidates", selectedCandidateName);
