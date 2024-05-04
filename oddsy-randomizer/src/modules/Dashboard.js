@@ -1,3 +1,4 @@
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import * as React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,8 +23,14 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import Form from './Form';
+import ImageCropper from "./ImageCropper";
 import Deposits from './votesAdded';
 import Orders from './CandidatesTable';
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
+import FormHelperText from '@mui/material/FormHelperText'
+import Button from '@mui/material/Button'
+import ReactCrop from 'react-image-crop'
 
 function Copyright(props) {
   return (
@@ -88,6 +95,12 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const defaultTheme = createTheme();
 
 export default function Dashboard({ totalVotes, candidatesData, handleSubmitNewVotes, history, deleteCandidate }) {
+  const [open, setOpen] = React.useState(true);
+  const [openModal, setOpenModal] = React.useState(false);
+  const [imageUpload, setImageUpload] = React.useState();
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
 
   const style = {
     position: 'absolute',
@@ -95,17 +108,31 @@ export default function Dashboard({ totalVotes, candidatesData, handleSubmitNewV
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
+    // overflow: "scroll",
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
   };
 
-  const [open, setOpen] = React.useState(true);
-  const [openModal, setOpenModal] = React.useState(false);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  function handleAddCandidate() {
+
+  }
+  const uploadFile = () => {
+    if (!imageUpload) return;
+
+    const storage = getStorage();
+
+    const imageRef = ref(storage, `images/${imageUpload.name}`)
+
+    uploadBytes(imageRef, imageUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then(url=> console.log(url))
+    })
+  }
+  React.useEffect(() => {
+    console.log(imageUpload);
+  }, [imageUpload])
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -115,6 +142,7 @@ export default function Dashboard({ totalVotes, candidatesData, handleSubmitNewV
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={openModal}
+        sx={{overflow: "scroll"}}
         onClose={() => setOpenModal(false)}
         closeAfterTransition
         slots={{ backdrop: Backdrop }}
@@ -125,13 +153,8 @@ export default function Dashboard({ totalVotes, candidatesData, handleSubmitNewV
         }}
       >
         <Fade in={openModal}>
-          <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
-              Add a new Candidate
-            </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
+          <Box sx={style} >
+            <ImageCropper />
           </Box>
         </Fade>
       </Modal>

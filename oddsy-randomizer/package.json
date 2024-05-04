@@ -17,6 +17,7 @@
     "firebase": "^10.8.0",
     "react": "latest",
     "react-dom": "latest",
+    "react-image-crop": "^11.0.5",
     "react-scripts": "latest"
   },
   "devDependencies": {
