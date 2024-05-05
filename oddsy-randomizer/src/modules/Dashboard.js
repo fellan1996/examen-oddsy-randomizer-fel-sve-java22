@@ -1,4 +1,3 @@
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import * as React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,8 +9,6 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Modal  from '@mui/material/Modal';
-import Backdrop from '@mui/material/Backdrop';
-import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
@@ -31,6 +28,7 @@ import FormLabel from '@mui/material/FormLabel'
 import FormHelperText from '@mui/material/FormHelperText'
 import Button from '@mui/material/Button'
 import ReactCrop from 'react-image-crop'
+import NewCandidateModal from "./NewCandidateModal";
 
 function Copyright(props) {
   return (
@@ -96,68 +94,22 @@ const defaultTheme = createTheme();
 
 export default function Dashboard({ totalVotes, candidatesData, handleSubmitNewVotes, history, deleteCandidate }) {
   const [open, setOpen] = React.useState(true);
-  const [openModal, setOpenModal] = React.useState(false);
-  const [imageUpload, setImageUpload] = React.useState();
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    // overflow: "scroll",
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
+
 
   function handleAddCandidate() {
-
+    // Den här funktionens syfte blir nog endast att rerender sidan. Ska sköta alla firestore grejer i NewCandidateModal
   }
-  const uploadFile = () => {
-    if (!imageUpload) return;
-
-    const storage = getStorage();
-
-    const imageRef = ref(storage, `images/${imageUpload.name}`)
-
-    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then(url=> console.log(url))
-    })
-  }
-  React.useEffect(() => {
-    console.log(imageUpload);
-  }, [imageUpload])
-
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={openModal}
-        sx={{overflow: "scroll"}}
-        onClose={() => setOpenModal(false)}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={openModal}>
-          <Box sx={style} >
-            <ImageCropper />
-          </Box>
-        </Fade>
-      </Modal>
+        <NewCandidateModal modalIsOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)} handleAddCandidate={handleAddCandidate} />
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
@@ -237,7 +189,7 @@ export default function Dashboard({ totalVotes, candidatesData, handleSubmitNewV
                     height: 240,
                   }}
                 >
-                  <Form currentCandidates={candidatesData} handleSubmitNewVotes={handleSubmitNewVotes} openNewCandidateModal={() => setOpenModal(true)} />
+                  <Form currentCandidates={candidatesData} handleSubmitNewVotes={handleSubmitNewVotes} openNewCandidateModal={() => setModalIsOpen(true)} />
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
