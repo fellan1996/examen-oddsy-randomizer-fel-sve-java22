@@ -1,11 +1,8 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Dashboard from './modules/Dashboard.js';
 import { db } from "./firebase.js";
 import {
-  addDoc,
   collection,
   doc,
   updateDoc,
@@ -13,23 +10,11 @@ import {
   deleteDoc
 } from "@firebase/firestore";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 export default function App() {
   const [totalVotes, setTotalVotes] = React.useState(0);
   const [candidatesData, setCandidatesData] = React.useState([]);
   const [history, setHistory] = React.useState([]);
+  const [pageToShow, setPageToShow] = React.useState("creator");
   
 
   const updateTotalVotes = (tempCandidatesData) => {
@@ -47,7 +32,7 @@ export default function App() {
       console.log(docRefCandidates);
       const documents = await getDocs(docRefCandidates);
       documents.forEach((doc) => {
-        tempCandidatesData.push({name: doc.id, votes: doc.data().votes});
+        tempCandidatesData.push({name: doc.id, picture: doc.data().picture, votes: doc.data().votes});
       });
       setCandidatesData(tempCandidatesData.sort((a, b) => b.votes - a.votes)); // updating the candidatesData state
       updateTotalVotes(tempCandidatesData);
@@ -87,7 +72,7 @@ export default function App() {
 
   return (
       <Box>
-      <Dashboard totalVotes={totalVotes} candidatesData={candidatesData} history={history} handleSubmitNewVotes={handleSubmitNewVotes} deleteCandidate={handleDeleteCandidate} />
+      <Dashboard totalVotes={totalVotes} pageToShow={pageToShow} candidatesData={candidatesData} setPageToShow={(page) => setPageToShow(page)} updateCandidatesData={updateCandidatesData} history={history} handleSubmitNewVotes={handleSubmitNewVotes} deleteCandidate={handleDeleteCandidate} />
       </Box>
   );
 }

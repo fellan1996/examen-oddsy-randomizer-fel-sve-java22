@@ -18,7 +18,7 @@ import IconButton from "@mui/material/IconButton";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "../firebase";
 
-export default function NewCandidateModal({ modalIsOpen, closeModal }) {
+export default function NewCandidateModal({ modalIsOpen, closeModal, updateCandidatesData }) {
   const [candidateImageURL, setCandidateImageURL] = React.useState("");
   const [newCandidateName, setNewCandidateName] = React.useState("");
 
@@ -65,6 +65,8 @@ export default function NewCandidateModal({ modalIsOpen, closeModal }) {
 
         setCandidateImageURL("");
         setNewCandidateName("");
+        updateCandidatesData();
+        closeModal();
 
         //CandidatesData i App.js ska nu uppdateras och modalen ska stängas samt ett success-meddelande ska visas
     }

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,6 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
+import Avatar from '@mui/material/Avatar';
 
 // Generate Order Data
 
@@ -38,7 +38,7 @@ export default function Orders({ candidatesData, deleteCandidate }) {
           {candidatesData.map((candidate, index) => (
             <TableRow key={candidate.name}>
               <TableCell>{index+1}</TableCell>
-              <TableCell>temporary</TableCell>
+              <TableCell><Avatar src={candidate.picture} alt={candidate.name + "profile picture"} /></TableCell>
               <TableCell>{candidate.name}</TableCell>
               <TableCell>{candidate.votes}</TableCell>
               <TableCell align="right">
