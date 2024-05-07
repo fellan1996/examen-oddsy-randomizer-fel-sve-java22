@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 
 import Form from "./Form";
 import Deposits from "./votesAdded";
-import Orders from "./CandidatesTable";
+import CandidatesTable from "./CandidatesTable";
 import NewCandidateModal from "./NewCandidateModal";
 
 export default function Dashboard({
@@ -57,7 +57,7 @@ export default function Dashboard({
       </Grid>
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          <Orders
+          <CandidatesTable
             candidatesData={candidatesData}
             deleteCandidate={deleteCandidate}
           />

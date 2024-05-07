@@ -22,11 +22,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { secondaryListItems } from "./modules/listItems";
+import Arena from "./modules/Arena.jsx";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import StadiumIcon from '@mui/icons-material/Stadium';
+import StadiumIcon from "@mui/icons-material/Stadium";
 import CssBaseline from "@mui/material/CssBaseline";
 
 const drawerWidth = 240;
@@ -227,21 +228,25 @@ export default function App() {
           }}
         >
           <Toolbar />
-          {pageToShow === "creator" ?
-          <Dashboard
-            totalVotes={totalVotes}
-            pageToShow={pageToShow}
-            candidatesData={candidatesData}
-            setPageToShow={(page) => setPageToShow(page)}
-            updateCandidatesData={updateCandidatesData}
-            history={history}
-            handleSubmitNewVotes={handleSubmitNewVotes}
-            deleteCandidate={handleDeleteCandidate}
-          />
-          : pageToShow === "arena" ?
-          <h1>Welcome to the arena!</h1>
-          : <h1>Something went wrong</h1>
-        }
+          {pageToShow === "creator" ? (
+            <Dashboard
+              totalVotes={totalVotes}
+              pageToShow={pageToShow}
+              candidatesData={candidatesData}
+              setPageToShow={(page) => setPageToShow(page)}
+              updateCandidatesData={updateCandidatesData}
+              history={history}
+              handleSubmitNewVotes={handleSubmitNewVotes}
+              deleteCandidate={handleDeleteCandidate}
+            />
+          ) : pageToShow === "arena" ? (
+            <>
+              <h1>Welcome to the arena!</h1>
+              <Arena candidatesData={candidatesData} />
+            </>
+          ) : (
+            <h1>Something went wrong</h1>
+          )}
         </Box>
       </Box>
     </ThemeProvider>

@@ -12,7 +12,7 @@ import Avatar from '@mui/material/Avatar';
 // Generate Order Data
 
 
-export default function Orders({ candidatesData, deleteCandidate }) {
+export default function CandidatesTable({ candidatesData, deleteCandidate }) {
 
   function handleDelete(e) {
     e.preventDefault();
