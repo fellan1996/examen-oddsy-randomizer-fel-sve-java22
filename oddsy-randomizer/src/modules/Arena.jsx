@@ -3,15 +3,14 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
-import initialBattlefieldApproach from "./listItems";
+import CandidatesTable from "./CandidatesTable";
+import { Button } from "@mui/material";
 
-export default function Arena({ candidatesData }) {
-  const [initBattleFieldArray, setInitBattleFieldArray] = React.useState(
-    initialBattlefieldApproach(candidatesData.length)
-  );
+export default function Arena({ initBattlefieldArr, setInitBattlefieldArr, candidatesData, deleteCandidate }) {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Button onClick={setInitBattlefieldArr}>Generate battlefield</Button>
       <Paper
         sx={{
           p: 2,
@@ -22,7 +21,7 @@ export default function Arena({ candidatesData }) {
       >
         <Stack direction="row">
         {  
-        initBattleFieldArray.map((columnArr, columnIndex) => (
+        initBattlefieldArr.map((columnArr, columnIndex) => (
           <Stack 
             key={columnIndex}
             sx={{ marginTop: 11.2*columnIndex, marginLeft: -3 }} 
@@ -46,6 +45,12 @@ export default function Arena({ candidatesData }) {
         }
         </Stack>
       </Paper>
+        <Paper sx={{ p: 2, display: "flex", flexDirection: "column", marginTop: 7, marginBottom: 20 }}>
+          <CandidatesTable
+            candidatesData={candidatesData}
+            deleteCandidate={deleteCandidate}
+          />
+        </Paper>
     </Container>
   );
 }

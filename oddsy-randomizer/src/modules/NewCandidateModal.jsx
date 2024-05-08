@@ -44,10 +44,6 @@ export default function NewCandidateModal({ modalIsOpen, closeModal, updateCandi
     },
   };
 
-  useEffect(() => {
-    console.log(candidateImageURL);
-  }, [candidateImageURL]);
-
   async function handleSubmit() {
     const docRef = doc(db, "candidates", newCandidateName);
     const docSnap = await getDoc(docRef);

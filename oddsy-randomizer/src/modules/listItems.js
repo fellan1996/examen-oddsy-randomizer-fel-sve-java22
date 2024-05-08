@@ -70,9 +70,31 @@ export const secondaryListItems = (
     </ListItemButton>
   </React.Fragment>
 );
+export default function createShuffledIndices(numOfCandidates) {
+  const shuffledIndices = [];
+  Array.from({ length: numOfCandidates }).map((_, index ) => {
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random()*numOfCandidates);
+    } while (shuffledIndices.includes(randomIndex));
+    shuffledIndices.push(randomIndex);
+  })
+  return shuffledIndices;
+}
+export const blabla = (candidatesData) => {
+  return candidatesData[0].name;
+}
 
-export default function initialBattlefieldApproach(numOfCandidates) {
-  switch (numOfCandidates) {
+export const initialBattlefieldSetup = (candidatesData) => {
+  const shuffledIndices = createShuffledIndices(candidatesData.length);
+  const shuffledCandidatesData = shuffledIndices.map((index) => (
+    {name: candidatesData[index].name,
+      picture: candidatesData[index].picture,
+      votes: candidatesData[index].votes
+    }
+  )
+)
+  switch (shuffledCandidatesData.length) {
     case 1:
       return [1];
     case 2:
@@ -97,63 +119,62 @@ export default function initialBattlefieldApproach(numOfCandidates) {
           },
           {
             placement: 0.1,
-            name: "Tin",
+            name: shuffledCandidatesData[0].name,
             neighbours: [0.0, 1.0, 1.1, 0.2],
-            picture:
-              "https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Fnorway%20landscape.jpg?alt=media&token=cf370874-4c1f-402c-9231-107f7d390492",
-            votes: 5,
+            picture: shuffledCandidatesData[0].picture,
+            votes: shuffledCandidatesData[0].votes,
           },
           {
             placement: 0.2,
-            name: "Christian",
+            name: shuffledCandidatesData[1].name,
             neighbours: [0.1, 1.1, 1.2],
             picture:
-              "https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Fnordic%20landscape.jpg?alt=media&token=e2fae026-3fda-477a-86f6-5ec425d1abcc",
-            votes: 6,
+              shuffledCandidatesData[1].picture,
+            votes: shuffledCandidatesData[1].votes,
           },
         ],
         [
           {
             placement: 1.0,
-            name: "Felix",
+            name: shuffledCandidatesData[2].name,
             neighbours: [0.0, 0.1, 1.1, 2.0, 2.1],
             picture:
-              "https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Fchilling.png?alt=media&token=5224d64c-67d9-4cc8-87a4-f469f46a61c6",
-            votes: 3,
+              shuffledCandidatesData[2].picture,
+            votes: shuffledCandidatesData[2].votes,
           },
           {
             placement: 1.1,
-            name: "Rafa",
+            name: shuffledCandidatesData[3].name,
             neighbours: [0.1, 0.2, 1.0, 1.2, 2.1, 2.2],
             picture:
-              "https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Fmadrid.jpg?alt=media&token=e172ad43-0eb2-4095-97ac-500168a6bfdd",
-            votes: 4,
+              shuffledCandidatesData[3].picture,
+            votes: shuffledCandidatesData[3].votes,
           },
           {
             placement: 1.2,
-            name: "Anna",
+            name: shuffledCandidatesData[4].name,
             neighbours: [0.2, 1.1, 2.2],
             picture:
-              "https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Fcalm_lake.jpg?alt=media&token=9d430980-865b-4c97-9935-ff5bf46a1cb7",
-            votes: 5,
+              shuffledCandidatesData[4].picture,
+              votes: shuffledCandidatesData[4].votes,
           },
         ],
         [
           {
             placement: 2.0,
-            name: "Holm",
+            name: shuffledCandidatesData[5].name,
             neighbours: [1.0, 2.1],
             picture:
-              "https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Fberlin.jpg?alt=media&token=eac5cffe-57f4-4638-8a17-5b9ec94b87af",
-            votes: 6,
+            shuffledCandidatesData[5].picture,
+            votes: shuffledCandidatesData[5].votes,
           },
           {
             placement: 2.1,
-            name: "Björn",
+            name: shuffledCandidatesData[6].name,
             neighbours: [1.0, 1.1, 2.0, 2.2],
             picture:
-              "https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Ftomater.jpg?alt=media&token=7dc92f3f-a0b2-41ef-b25f-71cc1de41a4f",
-            votes: 6,
+              shuffledCandidatesData[6].picture,
+            votes: shuffledCandidatesData[6].votes,
           },
           {
             placement: 2.2,
@@ -181,8 +202,8 @@ export default function initialBattlefieldApproach(numOfCandidates) {
     case 15:
       return [3, 3, 3, 3, 3];
     default:
-      const by5 = Math.floor(numOfCandidates / 5);
-      const rest = Math.floor(numOfCandidates % 5);
+      const by5 = Math.floor(candidatesData.length / 5);
+      const rest = Math.floor(candidatesData.length % 5);
       return [by5, by5, by5, by5, by5, rest];
   }
 }

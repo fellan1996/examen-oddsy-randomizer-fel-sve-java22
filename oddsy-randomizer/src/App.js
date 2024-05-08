@@ -21,7 +21,7 @@ import Badge from "@mui/material/Badge";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { secondaryListItems } from "./modules/listItems";
+import { secondaryListItems, initialBattlefieldSetup } from "./modules/listItems";
 import Arena from "./modules/Arena.jsx";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -84,9 +84,16 @@ export default function App() {
   const [history, setHistory] = React.useState([]);
   const [pageToShow, setPageToShow] = React.useState("creator");
   const [open, setOpen] = React.useState(true);
+  const [initBattlefieldArr, setInitBattlefieldArr] = React.useState([]);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const handleSetBattlefield = () => {
+    if(candidatesData.length !== 0){
+      setInitBattlefieldArr(initialBattlefieldSetup(candidatesData))
+    }
+  }
 
   const updateTotalVotes = (tempCandidatesData) => {
     let sumOfVotes = 0;
@@ -98,7 +105,6 @@ export default function App() {
     const docRefCandidates = collection(db, "candidates");
     const tempCandidatesData = [];
     try {
-      console.log(docRefCandidates);
       const documents = await getDocs(docRefCandidates);
       documents.forEach((doc) => {
         tempCandidatesData.push({
@@ -242,7 +248,7 @@ export default function App() {
           ) : pageToShow === "arena" ? (
             <>
               <h1>Welcome to the arena!</h1>
-              <Arena candidatesData={candidatesData} />
+              <Arena initBattlefieldArr={initBattlefieldArr} setInitBattlefieldArr={handleSetBattlefield} deleteCandidate={handleDeleteCandidate} candidatesData={candidatesData} />
             </>
           ) : (
             <h1>Something went wrong</h1>
