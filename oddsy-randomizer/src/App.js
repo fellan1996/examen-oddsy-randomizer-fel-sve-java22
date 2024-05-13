@@ -97,7 +97,6 @@ export default function App() {
   function handleBattle() {}
 
   function handleCandidateClick(clickedCandidate) {
-    console.log(clickedCandidate.votes);
     if (!challengerOne.name) {
       setChallengerOne({
         name: clickedCandidate.name,
@@ -116,6 +115,8 @@ export default function App() {
   const handleSetBattlefield = () => {
     if (candidatesData.length !== 0) {
       setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
+      setChallengerOne({});
+      setChallengerTwo({});
     }
   };
 

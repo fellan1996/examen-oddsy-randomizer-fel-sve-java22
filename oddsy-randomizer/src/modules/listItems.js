@@ -103,25 +103,26 @@ const createFighterDataObj = (fighterData) => {
     return {
       name: null,
       picture: null,
-      votes: null
+      votes: null,
     };
   } else {
     return {
       name: fighterData.name,
       picture: fighterData.picture,
-      votes: fighterData.votes
+      votes: fighterData.votes,
     };
   }
 };
 
-
 export const initialBattlefieldSetup = (candidatesData) => {
   const shuffledIndices = createShuffledIndices(candidatesData.length);
-  const shuffledCandidatesData = shuffledIndices.map((index) => ({
-    name: candidatesData[index].name,
-    picture: candidatesData[index].picture,
-    votes: candidatesData[index].votes,
-  }));
+  const shuffledCandidatesData = shuffledIndices
+    .map((index) => ({
+      name: candidatesData[index].name,
+      picture: candidatesData[index].picture,
+      votes: candidatesData[index].votes,
+    }))
+    .filter((obj) => obj.votes > 0);
   switch (shuffledCandidatesData.length) {
     case 1:
       return createBattlefieldData([
