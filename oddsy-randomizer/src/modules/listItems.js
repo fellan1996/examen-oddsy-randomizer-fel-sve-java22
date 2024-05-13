@@ -70,43 +70,131 @@ export const secondaryListItems = (
     </ListItemButton>
   </React.Fragment>
 );
-export default function createShuffledIndices(numOfCandidates) {
+function createShuffledIndices(numOfCandidates) {
   const shuffledIndices = [];
-  Array.from({ length: numOfCandidates }).map((_, index ) => {
+  Array.from({ length: numOfCandidates }).map(() => {
     let randomIndex;
     do {
-      randomIndex = Math.floor(Math.random()*numOfCandidates);
+      randomIndex = Math.floor(Math.random() * numOfCandidates);
     } while (shuffledIndices.includes(randomIndex));
     shuffledIndices.push(randomIndex);
-  })
+  });
   return shuffledIndices;
 }
-export const blabla = (candidatesData) => {
-  return candidatesData[0].name;
-}
+const createBattlefieldData = (dataArr) => [
+  [
+    createFighterDataObj(dataArr[0]),
+    createFighterDataObj(dataArr[1]),
+    createFighterDataObj(dataArr[2]),
+  ],
+  [
+    createFighterDataObj(dataArr[3]),
+    createFighterDataObj(dataArr[4]),
+    createFighterDataObj(dataArr[5]),
+  ],
+  [
+    createFighterDataObj(dataArr[6]),
+    createFighterDataObj(dataArr[7]),
+    createFighterDataObj(dataArr[8]),
+  ],
+];
+const createFighterDataObj = (fighterData) => {
+  if (fighterData === null) {
+    return {
+      name: null,
+      picture: null,
+      votes: null
+    };
+  } else {
+    return {
+      name: fighterData.name,
+      picture: fighterData.picture,
+      votes: fighterData.votes
+    };
+  }
+};
+
 
 export const initialBattlefieldSetup = (candidatesData) => {
   const shuffledIndices = createShuffledIndices(candidatesData.length);
-  const shuffledCandidatesData = shuffledIndices.map((index) => (
-    {name: candidatesData[index].name,
-      picture: candidatesData[index].picture,
-      votes: candidatesData[index].votes
-    }
-  )
-)
+  const shuffledCandidatesData = shuffledIndices.map((index) => ({
+    name: candidatesData[index].name,
+    picture: candidatesData[index].picture,
+    votes: candidatesData[index].votes,
+  }));
   switch (shuffledCandidatesData.length) {
     case 1:
-      return [1];
+      return createBattlefieldData([
+        null,
+        null,
+        null,
+        null,
+        shuffledCandidatesData[0],
+        null,
+        null,
+        null,
+        null,
+      ]);
     case 2:
-      return [2];
+      return createBattlefieldData([
+        null,
+        shuffledCandidatesData[0],
+        null,
+        null,
+        shuffledCandidatesData[1],
+        null,
+        null,
+        null,
+        null,
+      ]);
     case 3:
-      return [2, 1];
+      return createBattlefieldData([
+        null,
+        shuffledCandidatesData[0],
+        null,
+        shuffledCandidatesData[1],
+        shuffledCandidatesData[2],
+        null,
+        null,
+        null,
+        null,
+      ]);
     case 4:
-      return [2, 2];
+      return createBattlefieldData([
+        null,
+        shuffledCandidatesData[0],
+        null,
+        shuffledCandidatesData[1],
+        shuffledCandidatesData[2],
+        null,
+        shuffledCandidatesData[3],
+        null,
+        null,
+      ]);
     case 5:
-      return [1, 2, 2];
+      return createBattlefieldData([
+        null,
+        shuffledCandidatesData[0],
+        shuffledCandidatesData[1],
+        shuffledCandidatesData[2],
+        shuffledCandidatesData[3],
+        null,
+        shuffledCandidatesData[4],
+        null,
+        null,
+      ]);
     case 6:
-      return [2, 2, 2];
+      return createBattlefieldData([
+        null,
+        shuffledCandidatesData[0],
+        shuffledCandidatesData[1],
+        shuffledCandidatesData[2],
+        shuffledCandidatesData[3],
+        null,
+        shuffledCandidatesData[4],
+        shuffledCandidatesData[5],
+        null,
+      ]);
     case 7:
       return [
         [
@@ -128,8 +216,7 @@ export const initialBattlefieldSetup = (candidatesData) => {
             placement: 0.2,
             name: shuffledCandidatesData[1].name,
             neighbours: [0.1, 1.1, 1.2],
-            picture:
-              shuffledCandidatesData[1].picture,
+            picture: shuffledCandidatesData[1].picture,
             votes: shuffledCandidatesData[1].votes,
           },
         ],
@@ -138,25 +225,22 @@ export const initialBattlefieldSetup = (candidatesData) => {
             placement: 1.0,
             name: shuffledCandidatesData[2].name,
             neighbours: [0.0, 0.1, 1.1, 2.0, 2.1],
-            picture:
-              shuffledCandidatesData[2].picture,
+            picture: shuffledCandidatesData[2].picture,
             votes: shuffledCandidatesData[2].votes,
           },
           {
             placement: 1.1,
             name: shuffledCandidatesData[3].name,
             neighbours: [0.1, 0.2, 1.0, 1.2, 2.1, 2.2],
-            picture:
-              shuffledCandidatesData[3].picture,
+            picture: shuffledCandidatesData[3].picture,
             votes: shuffledCandidatesData[3].votes,
           },
           {
             placement: 1.2,
             name: shuffledCandidatesData[4].name,
             neighbours: [0.2, 1.1, 2.2],
-            picture:
-              shuffledCandidatesData[4].picture,
-              votes: shuffledCandidatesData[4].votes,
+            picture: shuffledCandidatesData[4].picture,
+            votes: shuffledCandidatesData[4].votes,
           },
         ],
         [
@@ -164,16 +248,14 @@ export const initialBattlefieldSetup = (candidatesData) => {
             placement: 2.0,
             name: shuffledCandidatesData[5].name,
             neighbours: [1.0, 2.1],
-            picture:
-            shuffledCandidatesData[5].picture,
+            picture: shuffledCandidatesData[5].picture,
             votes: shuffledCandidatesData[5].votes,
           },
           {
             placement: 2.1,
             name: shuffledCandidatesData[6].name,
             neighbours: [1.0, 1.1, 2.0, 2.2],
-            picture:
-              shuffledCandidatesData[6].picture,
+            picture: shuffledCandidatesData[6].picture,
             votes: shuffledCandidatesData[6].votes,
           },
           {
@@ -186,24 +268,40 @@ export const initialBattlefieldSetup = (candidatesData) => {
         ],
       ];
     case 8:
-      return [3, 2, 3];
+      return createBattlefieldData([
+        shuffledCandidatesData[0],
+        shuffledCandidatesData[1],
+        shuffledCandidatesData[2],
+        shuffledCandidatesData[3],
+        shuffledCandidatesData[4],
+        shuffledCandidatesData[5],
+        shuffledCandidatesData[6],
+        shuffledCandidatesData[7],
+        null,
+      ]);
     case 9:
-      return [3, 3, 3];
-    case 10:
-      return [3, 4, 3];
-    case 11:
-      return [3, 3, 3, 2];
-    case 12:
-      return [2, 3, 2, 3, 2];
-    case 13:
-      return [2, 3, 3, 3, 2];
-    case 14:
-      return [2, 3, 4, 3, 2];
-    case 15:
-      return [3, 3, 3, 3, 3];
+      return createBattlefieldData([
+        shuffledCandidatesData[0],
+        shuffledCandidatesData[1],
+        shuffledCandidatesData[2],
+        shuffledCandidatesData[3],
+        shuffledCandidatesData[4],
+        shuffledCandidatesData[5],
+        shuffledCandidatesData[6],
+        shuffledCandidatesData[7],
+        shuffledCandidatesData[9],
+      ]);
     default:
-      const by5 = Math.floor(candidatesData.length / 5);
-      const rest = Math.floor(candidatesData.length % 5);
-      return [by5, by5, by5, by5, by5, rest];
+      return createBattlefieldData([
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ]);
   }
-}
+};

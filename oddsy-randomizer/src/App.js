@@ -21,7 +21,10 @@ import Badge from "@mui/material/Badge";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { secondaryListItems, initialBattlefieldSetup } from "./modules/listItems";
+import {
+  secondaryListItems,
+  initialBattlefieldSetup,
+} from "./modules/listItems";
 import Arena from "./modules/Arena.jsx";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -85,15 +88,36 @@ export default function App() {
   const [pageToShow, setPageToShow] = React.useState("creator");
   const [open, setOpen] = React.useState(true);
   const [initBattlefieldArr, setInitBattlefieldArr] = React.useState([]);
+  const [challengerOne, setChallengerOne] = React.useState({});
+  const [challengerTwo, setChallengerTwo] = React.useState({});
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  const handleSetBattlefield = () => {
-    if(candidatesData.length !== 0){
-      setInitBattlefieldArr(initialBattlefieldSetup(candidatesData))
+  function handleBattle() {}
+
+  function handleCandidateClick(clickedCandidate) {
+    console.log(clickedCandidate.votes);
+    if (!challengerOne.name) {
+      setChallengerOne({
+        name: clickedCandidate.name,
+        picture: clickedCandidate.picture,
+        votes: clickedCandidate.votes,
+      });
+    } else {
+      setChallengerTwo({
+        name: clickedCandidate.name,
+        picture: clickedCandidate.picture,
+        votes: clickedCandidate.votes,
+      });
     }
   }
+
+  const handleSetBattlefield = () => {
+    if (candidatesData.length !== 0) {
+      setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
+    }
+  };
 
   const updateTotalVotes = (tempCandidatesData) => {
     let sumOfVotes = 0;
@@ -232,6 +256,7 @@ export default function App() {
             height: "100vh",
             overflow: "auto",
           }}
+          
         >
           <Toolbar />
           {pageToShow === "creator" ? (
@@ -248,7 +273,16 @@ export default function App() {
           ) : pageToShow === "arena" ? (
             <>
               <h1>Welcome to the arena!</h1>
-              <Arena initBattlefieldArr={initBattlefieldArr} setInitBattlefieldArr={handleSetBattlefield} deleteCandidate={handleDeleteCandidate} candidatesData={candidatesData} />
+              <Arena
+                initBattlefieldArr={initBattlefieldArr}
+                setInitBattlefieldArr={handleSetBattlefield}
+                deleteCandidate={handleDeleteCandidate}
+                candidatesData={candidatesData}
+                handleBattle={handleBattle}
+                challengerOne={challengerOne}
+                challengerTwo={challengerTwo}
+                handleCandidateClick={handleCandidateClick}
+              />
             </>
           ) : (
             <h1>Something went wrong</h1>
