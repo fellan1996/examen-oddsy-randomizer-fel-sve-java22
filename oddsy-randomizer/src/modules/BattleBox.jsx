@@ -15,7 +15,7 @@ export default function BattleBox({ challengerOne, challengerTwo, handleBattle }
         mr: 10,
     }
     function handleBattleClick() {
-        handleBattle(challengerOne, challengerTwo);
+        handleBattle(parseFloat(challengerOneOdds.split("%")[0]));
     }
     React.useEffect(() => {
         if(challengerOne.votes && challengerTwo.votes){

@@ -66,6 +66,7 @@ export default function Form({ currentCandidates, handleSubmitNewVotes, openNewC
             id="outlined-number"
             label="Votes"
             value={votesToBeAdded}
+            required
             onChange={(e) => setVotesToBeAdded(e.target.value)}
             type="number"
             size="small"

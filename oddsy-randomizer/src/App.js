@@ -94,7 +94,18 @@ export default function App() {
     setOpen(!open);
   };
 
-  function handleBattle() {}
+  function handleBattle(challengerOneOdds) {
+    console.log(challengerOneOdds);
+    if (Math.random()*100 < challengerOneOdds) {
+      handleSubmitNewVotes(challengerOne.name, challengerTwo.votes);
+      handleDeleteCandidate(challengerTwo.name);
+    }else {
+      handleSubmitNewVotes(challengerTwo.name, challengerOne.votes);
+      handleDeleteCandidate(challengerOne.name);
+    }
+    setChallengerOne({});
+    setChallengerTwo({});
+  }
 
   function handleCandidateClick(clickedCandidate) {
     if (!challengerOne.name) {
@@ -167,10 +178,10 @@ export default function App() {
     setHistory(tempHistory);
   };
 
-  async function handleDeleteCandidate(candidate) {
-    await deleteDoc(doc(db, "candidates", candidate));
+  async function handleDeleteCandidate(candidateName) {
+    await deleteDoc(doc(db, "candidates", candidateName));
     await updateCandidatesData();
-    console.log(`${candidate} has been deleted`);
+    console.log(`${candidateName} has been deleted`);
   }
 
   React.useEffect(() => {
