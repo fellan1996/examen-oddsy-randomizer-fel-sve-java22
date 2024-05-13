@@ -4,6 +4,7 @@ import { CanvasPreview } from "./CanvasPreview";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import InputLabel from "@mui/material/InputLabel";
 import Button from "@mui/material/Button";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { IconButton } from "@mui/material";
@@ -104,15 +105,17 @@ export default function ImageCropper({ handleUpload }) {
 
   return (
     <>
-      <div>
+      <div >
         <input
           type="file"
           accept="image/*"
           style={{ display: "none" }}
           ref={inputRef}
           onChange={handleFileSelect}
-        />
+          />
         <IconButton onClick={handleButtonClick}>
+          <InputLabel sx={{pointerEvents: "none"}}> Picture: </InputLabel>
+          
           <AddPhotoAlternateOutlinedIcon />
         </IconButton>
       </div>
