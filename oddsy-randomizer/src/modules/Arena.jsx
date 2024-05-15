@@ -3,20 +3,15 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
-import CandidatesTable from "./CandidatesTable";
 import Button from "@mui/material/Button";
 import BattleBox from "./BattleBox";
 
 export default function Arena({
   initBattlefieldArr,
-  setInitBattlefieldArr,
-  candidatesData,
-  deleteCandidate,
   challengerOne,
   challengerTwo,
   handleBattle,
   handleCandidateClick,
-  theme,
 }) {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -45,6 +40,7 @@ export default function Arena({
                     candidateData={placingObj}
                     columnIndex={columnIndex}
                     rowIndex={rowIndex}
+                    key={columnIndex + "." + rowIndex}
                     pickedForNextBattle={pickedForNextBattle}
                   />
                 );
@@ -59,21 +55,6 @@ export default function Arena({
           challengerOne={challengerOne}
           challengerTwo={challengerTwo}
           handleBattle={handleBattle}
-          theme={theme}
-        />
-      </Paper>
-      <Paper
-        sx={{
-          p: 2,
-          display: "flex",
-          flexDirection: "column",
-          marginTop: 7,
-          marginBottom: 20,
-        }}
-      >
-        <CandidatesTable
-          candidatesData={candidatesData}
-          deleteCandidate={deleteCandidate}
         />
       </Paper>
     </Container>

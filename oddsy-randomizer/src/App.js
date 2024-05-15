@@ -17,6 +17,8 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import Badge from "@mui/material/Badge";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -32,6 +34,7 @@ import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import CssBaseline from "@mui/material/CssBaseline";
+import Avatar from "@mui/material/Avatar";
 
 const drawerWidth = 240;
 
@@ -90,6 +93,7 @@ export default function App() {
   const [initBattlefieldArr, setInitBattlefieldArr] = React.useState([]);
   const [challengerOne, setChallengerOne] = React.useState({});
   const [challengerTwo, setChallengerTwo] = React.useState({});
+  const [dialogOpen, setDialogOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -98,10 +102,13 @@ export default function App() {
     try {
       // Assume challengerOneOdds is a property of challengerOne
       const randomResult = Math.random() * 100;
-      
-      console.log(`${challengerOne.name} -- ${challengerOneOdds} -- ${randomResult}`);
-      
-      if (randomResult < challengerOneOdds) {
+      const aWinnerIsToBeAnnounced = candidatesData.length === 2;
+      console.log(
+        `${challengerOne.name} -- ${challengerOneOdds} -- ${randomResult}`
+      );
+      const challengerOneWon = randomResult < challengerOneOdds;
+      aWinnerIsToBeAnnounced ? setDialogOpen(true) : setDialogOpen(false);
+      if (challengerOneWon) {
         await handleSubmitNewVotes(challengerOne.name, challengerTwo.votes);
         await handleDeleteCandidate(challengerTwo.name);
       } else {
@@ -109,7 +116,7 @@ export default function App() {
         await handleDeleteCandidate(challengerOne.name);
       }
     } catch (error) {
-      console.error('Error handling battle:', error);
+      console.error("Error handling battle:", error);
     }
   }
 
@@ -130,9 +137,9 @@ export default function App() {
   }
 
   const handleSetBattlefield = () => {
-      setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
-      setChallengerOne({});
-      setChallengerTwo({});
+    setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
+    setChallengerOne({});
+    setChallengerTwo({});
   };
 
   const updateTotalVotes = (tempCandidatesData) => {
@@ -185,7 +192,7 @@ export default function App() {
   async function handleDeleteCandidate(candidateName) {
     try {
       await deleteDoc(doc(db, "candidates", candidateName));
-      await updateCandidatesData(); 
+      await updateCandidatesData();
       console.log(`${candidateName} has been deleted`);
     } catch (e) {
       console.log(e);
@@ -197,14 +204,18 @@ export default function App() {
   }, []);
 
   React.useEffect(() => {
-      handleSetBattlefield();
+    handleSetBattlefield();
   }, [candidatesData]);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ display: "flex" }}>
-        <AppBar position="absolute" open={open} color={pageToShow=== "arena" ? "warning" : "primary"}>
+        <AppBar
+          position="absolute"
+          open={open}
+          color={pageToShow === "arena" ? "warning" : "primary"}
+        >
           <Toolbar
             sx={{
               pr: "24px", // keep right padding when drawer closed
@@ -280,7 +291,6 @@ export default function App() {
             height: "100vh",
             overflow: "auto",
           }}
-          
         >
           <Toolbar />
           {pageToShow === "creator" ? (
@@ -296,15 +306,17 @@ export default function App() {
             />
           ) : pageToShow === "arena" ? (
             <>
-              <div style={{display:"flex", justifyContent:"center", marginTop:55}}>
-                <Typography variant="h1">Welcome to the arena!</Typography >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: 45,
+                }}
+              >
+                <Typography variant="h1">Welcome to the arena!</Typography>
               </div>
               <Arena
-              theme={theme}
                 initBattlefieldArr={initBattlefieldArr}
-                setInitBattlefieldArr={handleSetBattlefield}
-                deleteCandidate={handleDeleteCandidate}
-                candidatesData={candidatesData}
                 handleBattle={handleBattle}
                 challengerOne={challengerOne}
                 challengerTwo={challengerTwo}
@@ -316,6 +328,37 @@ export default function App() {
           )}
         </Box>
       </Box>
+      <Dialog open={!!dialogOpen} onClose={() => setDialogOpen(false)}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            minWidth: 250,
+            minHeight: 250,
+            padding: 7,
+            boxShadow: "inset 0 0 15px lightgreen",
+          }}
+        >
+          <Typography variant="h2" color="success">
+            Winner!!
+          </Typography>
+          <Avatar
+            src={candidatesData[0].picture}
+            alt={candidatesData[0].name + " picture"}
+            sx={{
+              width: 180,
+              height: 180,
+              border: "4px ridge green",
+              borderRadius: 100,
+              boxShadow: "0 0 15px lightgreen",
+            }}
+          />
+          <Typography variant="h2" color="success">
+            {candidatesData[0].name}
+          </Typography>
+        </Box>
+      </Dialog>
     </ThemeProvider>
   );
 }
