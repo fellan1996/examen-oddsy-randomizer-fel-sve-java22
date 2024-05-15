@@ -337,7 +337,7 @@ export default function App() {
             minWidth: 250,
             minHeight: 250,
             padding: 7,
-            boxShadow: "inset 0 0 15px lightgreen",
+            boxShadow: "inset 0 0 15px 15px orange",
           }}
         >
           <Typography variant="h2" color="success">
@@ -349,9 +349,8 @@ export default function App() {
             sx={{
               width: 180,
               height: 180,
-              border: "4px ridge green",
               borderRadius: 100,
-              boxShadow: "0 0 15px lightgreen",
+              boxShadow: "0 0 15px orange",
             }}
           />
           <Typography variant="h2" color="success">
