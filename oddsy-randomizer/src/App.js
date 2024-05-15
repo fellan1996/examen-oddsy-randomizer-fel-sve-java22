@@ -9,7 +9,7 @@ import {
   getDocs,
   deleteDoc,
 } from "@firebase/firestore";
-import { ThemeProvider, styled, createTheme } from "@mui/material/styles";
+import { ThemeProvider, styled, createTheme, responsiveFontSizes } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -35,6 +35,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import CssBaseline from "@mui/material/CssBaseline";
 import Avatar from "@mui/material/Avatar";
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 const drawerWidth = 240;
 
@@ -83,6 +84,19 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const theme = createTheme();
+// theme = responsiveFontSizes(theme);
+theme.typography.h1 = {
+  fontSize: '4.2rem',
+  '@media (min-width:500px)': {
+    fontSize: '2.5rem',
+  },
+  '@media (min-width:900px)': {
+    fontSize: '3.5rem',
+  },
+  '@media (min-width:1100px)': {
+    fontSize: '4.5rem',
+  },
+}
 
 export default function App() {
   const [totalVotes, setTotalVotes] = React.useState(0);
@@ -90,24 +104,25 @@ export default function App() {
   const [history, setHistory] = React.useState([]);
   const [pageToShow, setPageToShow] = React.useState("creator");
   const [open, setOpen] = React.useState(true);
-  const [initBattlefieldArr, setInitBattlefieldArr] = React.useState([]);
-  const [challengerOne, setChallengerOne] = React.useState({});
-  const [challengerTwo, setChallengerTwo] = React.useState({});
+  // const [initBattlefieldArr, setInitBattlefieldArr] = React.useState([]);
+  // const [challengerOne, setChallengerOne] = React.useState({});
+  // const [challengerTwo, setChallengerTwo] = React.useState({});
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [prevCandidatesDataLength, setPrevCandidatesDataLength] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  async function handleBattle(challengerOneOdds) {
+  async function handleBattle(challengerOne, challengerTwo, challengerOneOdds) {
     try {
-      // Assume challengerOneOdds is a property of challengerOne
       const randomResult = Math.random() * 100;
-      const aWinnerIsToBeAnnounced = candidatesData.length === 2;
+      const announceAWinner = candidatesData.length === 2;
       console.log(
         `${challengerOne.name} -- ${challengerOneOdds} -- ${randomResult}`
       );
       const challengerOneWon = randomResult < challengerOneOdds;
-      aWinnerIsToBeAnnounced ? setDialogOpen(true) : setDialogOpen(false);
+      announceAWinner ? setDialogOpen(true) : setDialogOpen(false);
+
       if (challengerOneWon) {
         await handleSubmitNewVotes(challengerOne.name, challengerTwo.votes);
         await handleDeleteCandidate(challengerTwo.name);
@@ -120,27 +135,9 @@ export default function App() {
     }
   }
 
-  function handleCandidateClick(clickedCandidate) {
-    if (!challengerOne.name) {
-      setChallengerOne({
-        name: clickedCandidate.name,
-        picture: clickedCandidate.picture,
-        votes: clickedCandidate.votes,
-      });
-    } else {
-      setChallengerTwo({
-        name: clickedCandidate.name,
-        picture: clickedCandidate.picture,
-        votes: clickedCandidate.votes,
-      });
-    }
-  }
-
-  const handleSetBattlefield = () => {
-    setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
-    setChallengerOne({});
-    setChallengerTwo({});
-  };
+  // const handleSetBattlefield = () => {
+  //   setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
+  // };
 
   const updateTotalVotes = (tempCandidatesData) => {
     let sumOfVotes = 0;
@@ -190,6 +187,7 @@ export default function App() {
   };
 
   async function handleDeleteCandidate(candidateName) {
+    setPrevCandidatesDataLength(true);
     try {
       await deleteDoc(doc(db, "candidates", candidateName));
       await updateCandidatesData();
@@ -202,10 +200,6 @@ export default function App() {
   React.useEffect(() => {
     updateCandidatesData();
   }, []);
-
-  React.useEffect(() => {
-    handleSetBattlefield();
-  }, [candidatesData]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -316,11 +310,8 @@ export default function App() {
                 <Typography variant="h1">Welcome to the arena!</Typography>
               </div>
               <Arena
-                initBattlefieldArr={initBattlefieldArr}
+                candidatesData={candidatesData}
                 handleBattle={handleBattle}
-                challengerOne={challengerOne}
-                challengerTwo={challengerTwo}
-                handleCandidateClick={handleCandidateClick}
               />
             </>
           ) : (
@@ -328,7 +319,7 @@ export default function App() {
           )}
         </Box>
       </Box>
-      <Dialog open={!!dialogOpen} onClose={() => setDialogOpen(false)}>
+      {candidatesData.length === 1 && <Dialog open={!!dialogOpen} onClose={() => setDialogOpen(false)}>
         <Box
           sx={{
             display: "flex",
@@ -340,8 +331,17 @@ export default function App() {
             boxShadow: "inset 0 0 15px 15px orange",
           }}
         >
+          <Avatar 
+          src="https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Ftrophy.png?alt=media&token=1b643f01-0da9-4ee8-86f7-c9c9f795e4cc"
+          alt="trophy"
+          variant="square"
+          sx={{
+            width: 180,
+            height: 180
+          }}
+          />
           <Typography variant="h2" color="success">
-            Winner!!
+            <EmojiEventsIcon />Winner<EmojiEventsIcon />
           </Typography>
           <Avatar
             src={candidatesData[0].picture}
@@ -357,7 +357,7 @@ export default function App() {
             {candidatesData[0].name}
           </Typography>
         </Box>
-      </Dialog>
+      </Dialog>}
     </ThemeProvider>
   );
 }

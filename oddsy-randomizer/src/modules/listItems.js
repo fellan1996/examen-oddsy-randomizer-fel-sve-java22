@@ -197,77 +197,17 @@ export const initialBattlefieldSetup = (candidatesData) => {
         null,
       ]);
     case 7:
-      return [
-        [
-          {
-            placement: 0.0,
-            name: null,
-            neighbours: [0.1, 1.0],
-            picture: null,
-            votes: null,
-          },
-          {
-            placement: 0.1,
-            name: shuffledCandidatesData[0].name,
-            neighbours: [0.0, 1.0, 1.1, 0.2],
-            picture: shuffledCandidatesData[0].picture,
-            votes: shuffledCandidatesData[0].votes,
-          },
-          {
-            placement: 0.2,
-            name: shuffledCandidatesData[1].name,
-            neighbours: [0.1, 1.1, 1.2],
-            picture: shuffledCandidatesData[1].picture,
-            votes: shuffledCandidatesData[1].votes,
-          },
-        ],
-        [
-          {
-            placement: 1.0,
-            name: shuffledCandidatesData[2].name,
-            neighbours: [0.0, 0.1, 1.1, 2.0, 2.1],
-            picture: shuffledCandidatesData[2].picture,
-            votes: shuffledCandidatesData[2].votes,
-          },
-          {
-            placement: 1.1,
-            name: shuffledCandidatesData[3].name,
-            neighbours: [0.1, 0.2, 1.0, 1.2, 2.1, 2.2],
-            picture: shuffledCandidatesData[3].picture,
-            votes: shuffledCandidatesData[3].votes,
-          },
-          {
-            placement: 1.2,
-            name: shuffledCandidatesData[4].name,
-            neighbours: [0.2, 1.1, 2.2],
-            picture: shuffledCandidatesData[4].picture,
-            votes: shuffledCandidatesData[4].votes,
-          },
-        ],
-        [
-          {
-            placement: 2.0,
-            name: shuffledCandidatesData[5].name,
-            neighbours: [1.0, 2.1],
-            picture: shuffledCandidatesData[5].picture,
-            votes: shuffledCandidatesData[5].votes,
-          },
-          {
-            placement: 2.1,
-            name: shuffledCandidatesData[6].name,
-            neighbours: [1.0, 1.1, 2.0, 2.2],
-            picture: shuffledCandidatesData[6].picture,
-            votes: shuffledCandidatesData[6].votes,
-          },
-          {
-            placement: 2.2,
-            name: null,
-            neighbours: [1.1, 1.2, 2.1],
-            picture: null,
-            votes: null,
-          },
-        ],
-      ];
+      return createBattlefieldData([
+        null,
+        shuffledCandidatesData[0],
+        shuffledCandidatesData[1],
+        shuffledCandidatesData[2],
+        shuffledCandidatesData[3],
+        shuffledCandidatesData[4],
+        shuffledCandidatesData[5],
+        shuffledCandidatesData[6],
+        null,
+      ]);
     case 8:
       return createBattlefieldData([
         shuffledCandidatesData[0],
@@ -281,6 +221,7 @@ export const initialBattlefieldSetup = (candidatesData) => {
         null,
       ]);
     case 9:
+      console.log("Im in here!")
       return createBattlefieldData([
         shuffledCandidatesData[0],
         shuffledCandidatesData[1],
@@ -290,7 +231,7 @@ export const initialBattlefieldSetup = (candidatesData) => {
         shuffledCandidatesData[5],
         shuffledCandidatesData[6],
         shuffledCandidatesData[7],
-        shuffledCandidatesData[9],
+        shuffledCandidatesData[8],
       ]);
     default:
       return null;

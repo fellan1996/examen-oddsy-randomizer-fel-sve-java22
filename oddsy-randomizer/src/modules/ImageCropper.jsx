@@ -89,7 +89,6 @@ export default function ImageCropper({ handleUpload }) {
   function uploadCroppedImage() {
     if (!croppedImageFile) return;
     // Here you can upload the cropped image file to your cloud storage
-    console.log("Uploading cropped image:", croppedImageFile);
     const storage = getStorage();
     const imageRef = ref(storage, `images/${croppedImageFile.name}`);
     try {

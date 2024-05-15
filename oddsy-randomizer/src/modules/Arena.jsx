@@ -5,14 +5,42 @@ import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import BattleBox from "./BattleBox";
+import { initialBattlefieldSetup } from "./listItems";
 
 export default function Arena({
-  initBattlefieldArr,
-  challengerOne,
-  challengerTwo,
+  candidatesData,
   handleBattle,
-  handleCandidateClick,
 }) {
+  const [challengerOne, setChallengerOne] = React.useState({});
+  const [challengerTwo, setChallengerTwo] = React.useState({});
+  const [initBattlefieldArr, setInitBattlefieldArr] = React.useState([]);
+  console.log("Arena");
+
+  React.useEffect(() => {
+      setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
+  }, [candidatesData]);
+
+  function handleBattleClick(challengerOneOdds) {
+    handleBattle(challengerOne, challengerTwo, challengerOneOdds);
+    setChallengerOne({});
+    setChallengerTwo({});
+  }
+
+  function handleCandidateClick(clickedCandidateData) {
+    if (!challengerOne.name) {
+      setChallengerOne({
+        name: clickedCandidateData.name,
+        picture: clickedCandidateData.picture,
+        votes: clickedCandidateData.votes,
+      });
+    } else {
+      setChallengerTwo({
+        name: clickedCandidateData.name,
+        picture: clickedCandidateData.picture,
+        votes: clickedCandidateData.votes,
+      });
+    }
+  }
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Paper
@@ -22,58 +50,66 @@ export default function Arena({
           flexDirection: "column",
           alignItems: "center",
           minHeight: 255,
-          border:"4px ridge orange",
-          borderWidth: "4px 4px 0 4px"
+          border: "4px ridge orange",
+          borderWidth: "4px 4px 0 4px",
         }}
       >
         <Stack direction="row">
-          { initBattlefieldArr && initBattlefieldArr.map((columnArr, columnIndex) => (
-            <Stack
-              key={columnIndex}
-              sx={{ marginTop: 11.2 * columnIndex, marginLeft: -3 }}
-            >
-              {columnArr.map((placingObj, rowIndex) => {
-                const pickedForNextBattle = challengerOne.name === placingObj.name || challengerTwo.name === placingObj.name;
-                return (
-                  <ArenaCandidate
-                    handleCandidateClick={handleCandidateClick}
-                    candidateData={placingObj}
-                    columnIndex={columnIndex}
-                    rowIndex={rowIndex}
-                    key={columnIndex + "." + rowIndex}
-                    pickedForNextBattle={pickedForNextBattle}
-                  />
-                );
-              })}
-            </Stack>
-          ))}
+          {initBattlefieldArr &&
+            initBattlefieldArr.map((columnArr, columnIndex) => (
+              <Stack
+                key={columnIndex}
+                sx={{ marginTop: 11.2 * columnIndex, marginLeft: -3 }}
+              >
+                {columnArr.map((placingObj, rowIndex) => {
+                  const pickedForNextBattle =
+                    challengerOne.name === placingObj.name ||
+                    challengerTwo.name === placingObj.name;
+                  return (
+                    <ArenaCandidate
+                      handleCandidateClick={handleCandidateClick}
+                      candidateData={placingObj}
+                      columnIndex={columnIndex}
+                      rowIndex={rowIndex}
+                      key={columnIndex + "." + rowIndex}
+                      pickedForNextBattle={pickedForNextBattle}
+                    />
+                  );
+                })}
+              </Stack>
+            ))}
         </Stack>
       </Paper>
-      <Paper sx={{ p: 2, border:"4px ridge orange",
-          borderWidth: "0 4px 4px 4px"}}>
+      <Paper
+        sx={{
+          p: 2,
+          border: "4px ridge orange",
+          borderWidth: "0 4px 4px 4px",
+          position: "sticky",
+          bottom: 0,
+          backgroundImage:
+            "linear-gradient(rgb(255,229,215), rgb(255,215,204))",
+        }}
+      >
         <BattleBox
           challengerOne={challengerOne}
           challengerTwo={challengerTwo}
-          handleBattle={handleBattle}
+          handleBattle={handleBattleClick}
         />
       </Paper>
     </Container>
   );
 }
 
-
-
-
-
 function ArenaCandidate({
   handleCandidateClick,
   candidateData,
   rowIndex,
   columnIndex,
-  pickedForNextBattle
+  pickedForNextBattle,
 }) {
   const [isHovered, setIsHovered] = React.useState(false);
-
+ console.log("ArenaCandidate");
   function handleMouseEnter() {
     setIsHovered(true);
   }
@@ -126,7 +162,7 @@ function ArenaCandidate({
                 borderRadius: 100,
                 background: "rgb(0,0,0,0.3)",
                 boxShadow: "inset 1px 1px 1px black",
-                pointerEvents: 'none'
+                pointerEvents: "none",
               }}
             >
               {candidateData.name}
