@@ -293,16 +293,6 @@ export const initialBattlefieldSetup = (candidatesData) => {
         shuffledCandidatesData[9],
       ]);
     default:
-      return createBattlefieldData([
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-      ]);
+      return null;
   }
 };

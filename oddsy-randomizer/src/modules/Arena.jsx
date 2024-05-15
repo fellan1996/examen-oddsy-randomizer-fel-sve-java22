@@ -16,20 +16,23 @@ export default function Arena({
   challengerTwo,
   handleBattle,
   handleCandidateClick,
+  theme,
 }) {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Button onClick={setInitBattlefieldArr}>Generate battlefield</Button>
       <Paper
         sx={{
           p: 2,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          minHeight: 255,
+          border:"4px ridge orange",
+          borderWidth: "4px 4px 0 4px"
         }}
       >
         <Stack direction="row">
-          {initBattlefieldArr.map((columnArr, columnIndex) => (
+          { initBattlefieldArr && initBattlefieldArr.map((columnArr, columnIndex) => (
             <Stack
               key={columnIndex}
               sx={{ marginTop: 11.2 * columnIndex, marginLeft: -3 }}
@@ -50,11 +53,13 @@ export default function Arena({
           ))}
         </Stack>
       </Paper>
-      <Paper sx={{ p: 2 }}>
+      <Paper sx={{ p: 2, border:"4px ridge orange",
+          borderWidth: "0 4px 4px 4px"}}>
         <BattleBox
           challengerOne={challengerOne}
           challengerTwo={challengerTwo}
           handleBattle={handleBattle}
+          theme={theme}
         />
       </Paper>
       <Paper

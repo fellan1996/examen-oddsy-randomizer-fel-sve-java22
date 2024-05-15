@@ -94,17 +94,23 @@ export default function App() {
     setOpen(!open);
   };
 
-  function handleBattle(challengerOneOdds) {
-    console.log(challengerOneOdds);
-    if (Math.random()*100 < challengerOneOdds) {
-      handleSubmitNewVotes(challengerOne.name, challengerTwo.votes);
-      handleDeleteCandidate(challengerTwo.name);
-    }else {
-      handleSubmitNewVotes(challengerTwo.name, challengerOne.votes);
-      handleDeleteCandidate(challengerOne.name);
+  async function handleBattle(challengerOneOdds) {
+    try {
+      // Assume challengerOneOdds is a property of challengerOne
+      const randomResult = Math.random() * 100;
+      
+      console.log(`${challengerOne.name} -- ${challengerOneOdds} -- ${randomResult}`);
+      
+      if (randomResult < challengerOneOdds) {
+        await handleSubmitNewVotes(challengerOne.name, challengerTwo.votes);
+        await handleDeleteCandidate(challengerTwo.name);
+      } else {
+        await handleSubmitNewVotes(challengerTwo.name, challengerOne.votes);
+        await handleDeleteCandidate(challengerOne.name);
+      }
+    } catch (error) {
+      console.error('Error handling battle:', error);
     }
-    setChallengerOne({});
-    setChallengerTwo({});
   }
 
   function handleCandidateClick(clickedCandidate) {
@@ -124,11 +130,9 @@ export default function App() {
   }
 
   const handleSetBattlefield = () => {
-    if (candidatesData.length !== 0) {
       setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
       setChallengerOne({});
       setChallengerTwo({});
-    }
   };
 
   const updateTotalVotes = (tempCandidatesData) => {
@@ -169,7 +173,7 @@ export default function App() {
     } catch (e) {
       console.log(e);
     }
-    updateCandidatesData();
+    await updateCandidatesData();
 
     const tempHistory = history;
     tempHistory.unshift(
@@ -179,20 +183,28 @@ export default function App() {
   };
 
   async function handleDeleteCandidate(candidateName) {
-    await deleteDoc(doc(db, "candidates", candidateName));
-    await updateCandidatesData();
-    console.log(`${candidateName} has been deleted`);
+    try {
+      await deleteDoc(doc(db, "candidates", candidateName));
+      await updateCandidatesData(); 
+      console.log(`${candidateName} has been deleted`);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   React.useEffect(() => {
     updateCandidatesData();
   }, []);
 
+  React.useEffect(() => {
+      handleSetBattlefield();
+  }, [candidatesData]);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ display: "flex" }}>
-        <AppBar position="absolute" open={open}>
+        <AppBar position="absolute" open={open} color={pageToShow=== "arena" ? "warning" : "primary"}>
           <Toolbar
             sx={{
               pr: "24px", // keep right padding when drawer closed
@@ -220,9 +232,9 @@ export default function App() {
               Oddsy-Randomizer
             </Typography>
             <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
+              {/* <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
-              </Badge>
+              </Badge> */}
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -284,8 +296,11 @@ export default function App() {
             />
           ) : pageToShow === "arena" ? (
             <>
-              <h1>Welcome to the arena!</h1>
+              <div style={{display:"flex", justifyContent:"center", marginTop:55}}>
+                <Typography variant="h1">Welcome to the arena!</Typography >
+              </div>
               <Arena
+              theme={theme}
                 initBattlefieldArr={initBattlefieldArr}
                 setInitBattlefieldArr={handleSetBattlefield}
                 deleteCandidate={handleDeleteCandidate}

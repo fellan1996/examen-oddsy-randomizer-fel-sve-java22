@@ -3,8 +3,9 @@ import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import Stack from "@mui/material/Stack"
+import { ThemeContext } from "@emotion/react";
 
-export default function BattleBox({ challengerOne, challengerTwo, handleBattle }) {
+export default function BattleBox({ challengerOne, challengerTwo, handleBattle, theme }) {
     const [challengerOneOdds, setChallengerOneOdds] = React.useState("");
     const [challengerTwoOdds, setChallengerTwoOdds] = React.useState("");
     const style = {
