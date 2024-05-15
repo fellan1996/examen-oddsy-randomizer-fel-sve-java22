@@ -7,17 +7,14 @@ import Button from "@mui/material/Button";
 import BattleBox from "./BattleBox";
 import { initialBattlefieldSetup } from "./listItems";
 
-export default function Arena({
-  candidatesData,
-  handleBattle,
-}) {
+export default function Arena({ candidatesData, handleBattle }) {
   const [challengerOne, setChallengerOne] = React.useState({});
   const [challengerTwo, setChallengerTwo] = React.useState({});
   const [initBattlefieldArr, setInitBattlefieldArr] = React.useState([]);
   console.log("Arena");
 
   React.useEffect(() => {
-      setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
+    setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
   }, [candidatesData]);
 
   function handleBattleClick(challengerOneOdds) {
@@ -27,19 +24,23 @@ export default function Arena({
   }
 
   function handleCandidateClick(clickedCandidateData) {
-    if (!challengerOne.name) {
+    if (clickedCandidateData.name === challengerOne.name)
+      setChallengerOne({});
+    else if (clickedCandidateData.name === challengerTwo.name)
+      setChallengerTwo({});
+    else if (!challengerOne.name)
       setChallengerOne({
         name: clickedCandidateData.name,
         picture: clickedCandidateData.picture,
         votes: clickedCandidateData.votes,
       });
-    } else {
+    else
       setChallengerTwo({
         name: clickedCandidateData.name,
         picture: clickedCandidateData.picture,
         votes: clickedCandidateData.votes,
       });
-    }
+    
   }
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -109,7 +110,7 @@ function ArenaCandidate({
   pickedForNextBattle,
 }) {
   const [isHovered, setIsHovered] = React.useState(false);
- console.log("ArenaCandidate");
+  console.log("ArenaCandidate");
   function handleMouseEnter() {
     setIsHovered(true);
   }

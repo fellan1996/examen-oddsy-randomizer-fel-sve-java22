@@ -17,6 +17,7 @@ import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternate
 import IconButton from "@mui/material/IconButton";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "../firebase";
+import Alert from "@mui/material/Alert";
 
 export default function NewCandidateModal({
   modalIsOpen,
@@ -25,6 +26,8 @@ export default function NewCandidateModal({
 }) {
   const [candidateImageURL, setCandidateImageURL] = React.useState("");
   const [newCandidateName, setNewCandidateName] = React.useState("");
+  const [notifyUserAlreadyExists, setNotifyUserAlreadyExists] =
+    React.useState(false);
 
   const style = {
     position: "absolute",
@@ -54,6 +57,7 @@ export default function NewCandidateModal({
 
     if (docSnap.exists()) {
       //skapa errormeddelande
+      setNotifyUserAlreadyExists(true);
       console.log("candidate already exists");
     } else {
       const docData = {
@@ -89,9 +93,15 @@ export default function NewCandidateModal({
     >
       <Fade in={modalIsOpen}>
         <Box sx={style}>
+          {notifyUserAlreadyExists && (
+            <Alert severity="warning">
+              That user already exists. Please change the name
+            </Alert>
+          )}
           <form
-            onSubmit={event => {
+            onSubmit={(event) => {
               event.preventDefault();
+              setNotifyUserAlreadyExists(false);
               handleSubmit();
             }}
             style={{
