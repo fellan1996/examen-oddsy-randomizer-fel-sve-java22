@@ -3,6 +3,7 @@ import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import { CanvasPreview } from "./CanvasPreview";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import Box from "@mui/material/Box";
+
 import Stack from "@mui/material/Stack";
 import InputLabel from "@mui/material/InputLabel";
 import Button from "@mui/material/Button";
@@ -24,10 +25,11 @@ function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
     ),
     mediaWidth,
     mediaHeight
+    
   );
 }
 
-export default function ImageCropper({ handleUpload }) {
+export default function ImageCropper({ handleUpload, setWaitingForUpload }) {
   const [imgSrc, setImgSrc] = useState("");
   const [name, setName] = useState("");
   const previewCanvasRef = useRef(null);
@@ -35,6 +37,7 @@ export default function ImageCropper({ handleUpload }) {
   const [crop, setCrop] = useState();
   const [completedCrop, setCompletedCrop] = useState();
   const [croppedImageFile, setCroppedImageFile] = useState(null);
+
   const inputRef = React.useRef(null);
 
   const handleButtonClick = () => {
@@ -87,6 +90,7 @@ export default function ImageCropper({ handleUpload }) {
   }, [completedCrop]);
 
   function uploadCroppedImage() {
+    setWaitingForUpload(true);
     if (!croppedImageFile) return;
     // Here you can upload the cropped image file to your cloud storage
     const storage = getStorage();

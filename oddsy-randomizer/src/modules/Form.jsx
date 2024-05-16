@@ -11,7 +11,7 @@ import Select from "@mui/material/Select";
 
 export default function Form({ currentCandidates, handleSubmitNewVotes, openNewCandidateModal }) {
   const [selectedCandidate, setSelectedCandidate] = useState("");
-  const [votesToBeAdded, setVotesToBeAdded] = useState(0);
+  const [votesToBeAdded, setVotesToBeAdded] = useState(1);
 
   return (
     <Box sx={{ flexGrow: 1 }}>

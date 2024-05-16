@@ -3,6 +3,7 @@ import ImageCropper from "./ImageCropper";
 import React, { useEffect } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 import Fade from "@mui/material/Fade";
 import { styled } from "@mui/material/styles";
@@ -28,6 +29,7 @@ export default function NewCandidateModal({
   const [newCandidateName, setNewCandidateName] = React.useState("");
   const [notifyUserAlreadyExists, setNotifyUserAlreadyExists] =
     React.useState(false);
+  const [waitingForUpload, setWaitingForUpload] = React.useState(false);
 
   const style = {
     position: "absolute",
@@ -122,8 +124,18 @@ export default function NewCandidateModal({
               size="small"
               sx={{ maxWidth: 220 }}
             />
-            {!candidateImageURL ? (
-              <ImageCropper handleUpload={(url) => setCandidateImageURL(url)} />
+            {waitingForUpload ? (
+              <Box>
+                <CircularProgress />
+              </Box>
+            ) : !candidateImageURL ? (
+              <ImageCropper
+                handleUpload={(url) => {
+                  setCandidateImageURL(url);
+                  setWaitingForUpload(false);
+                }}
+                setWaitingForUpload={setWaitingForUpload}
+              />
             ) : (
               <>
                 <Badge
