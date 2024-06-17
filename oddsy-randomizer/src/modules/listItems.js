@@ -45,31 +45,6 @@ export const mainListItems = (
   </React.Fragment>
 );
 
-export const secondaryListItems = (
-  <React.Fragment>
-    <ListSubheader component="div" inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItemButton>
-  </React.Fragment>
-);
 function createShuffledIndices(numOfCandidates) {
   const shuffledIndices = [];
   Array.from({ length: numOfCandidates }).map(() => {
@@ -121,8 +96,8 @@ export const initialBattlefieldSetup = (candidatesData) => {
         {},
         {},
         {},
-        {},
         shuffledCandidatesData[0],
+        {},
         {},
         {},
         {},
@@ -131,9 +106,9 @@ export const initialBattlefieldSetup = (candidatesData) => {
     case 2:
       return createBattlefieldData([
         {},
+        {},
+        {},
         shuffledCandidatesData[0],
-        {},
-        {},
         shuffledCandidatesData[1],
         {},
         {},

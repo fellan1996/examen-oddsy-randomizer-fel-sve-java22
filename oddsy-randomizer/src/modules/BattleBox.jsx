@@ -31,9 +31,9 @@ export default function BattleBox({ challengerOne, challengerTwo, handleBattle }
     },[challengerOne,challengerTwo]);
     return (
             <Stack direction="row" gap={4} sx={style}>
-                <Typography>{challengerOne.name} - {challengerOneOdds}</Typography>
+                <Typography>{challengerOne.name && challengerOne.name + " - " + challengerOne.votes + " votes - "}{challengerOneOdds}</Typography>
                 <Typography> --- Vs --- </Typography>
-                <Typography>{challengerTwo.name} - {challengerTwoOdds}</Typography>
+                <Typography>{challengerTwo.name && challengerTwo.name + " - " + challengerTwo.votes + " votes - "}{challengerTwoOdds}</Typography>
                 <Button onClick={handleBattleClick} disabled={challengerOneOdds ? false : true} color="error" variant="contained">Fight!</Button>
             </Stack>
     );

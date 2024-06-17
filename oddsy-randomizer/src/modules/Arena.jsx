@@ -6,6 +6,8 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import BattleBox from "./BattleBox";
 import { initialBattlefieldSetup } from "./listItems";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 export default function Arena({ candidatesData, handleBattle }) {
   const [challengerOne, setChallengerOne] = React.useState({});
@@ -56,7 +58,7 @@ export default function Arena({ candidatesData, handleBattle }) {
         }}
       >
         <Stack direction="row">
-          {initBattlefieldArr &&
+          {initBattlefieldArr[0] ?
             initBattlefieldArr.map((columnArr, columnIndex) => (
               <Stack
                 key={columnIndex}
@@ -78,7 +80,9 @@ export default function Arena({ candidatesData, handleBattle }) {
                   );
                 })}
               </Stack>
-            ))}
+            )) 
+          : <Typography sx={{mt:10}}>Add at least two candidates on the creator page and give them votes in order to fight</Typography>
+          }
         </Stack>
       </Paper>
       <Paper

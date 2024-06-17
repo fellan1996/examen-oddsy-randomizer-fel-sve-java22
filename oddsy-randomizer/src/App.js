@@ -24,7 +24,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import {
-  secondaryListItems,
   initialBattlefieldSetup,
 } from "./modules/listItems";
 import Arena from "./modules/Arena.jsx";
@@ -104,11 +103,7 @@ export default function App() {
   const [history, setHistory] = React.useState([]);
   const [pageToShow, setPageToShow] = React.useState("creator");
   const [open, setOpen] = React.useState(true);
-  // const [initBattlefieldArr, setInitBattlefieldArr] = React.useState([]);
-  // const [challengerOne, setChallengerOne] = React.useState({});
-  // const [challengerTwo, setChallengerTwo] = React.useState({});
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [prevCandidatesDataLength, setPrevCandidatesDataLength] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -187,7 +182,6 @@ export default function App() {
   };
 
   async function handleDeleteCandidate(candidateName) {
-    setPrevCandidatesDataLength(true);
     try {
       await deleteDoc(doc(db, "candidates", candidateName));
       await updateCandidatesData();
@@ -271,7 +265,6 @@ export default function App() {
               <ListItemText primary="Arena" />
             </ListItemButton>
             <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
           </List>
         </Drawer>
         <Box
