@@ -6,9 +6,9 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
 import Form from "./Form";
-import Deposits from "./votesAdded";
 import CandidatesTable from "./CandidatesTable";
 import NewCandidateModal from "./NewCandidateModal";
+import VotesInfo from "./VotesInfo";
 
 
 
@@ -39,7 +39,7 @@ export default function Dashboard({
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Snackbar open={snackbarIsOpen} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={snackbarIsOpen} autoHideDuration={3000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
           severity="success"
@@ -82,7 +82,7 @@ export default function Dashboard({
               height: 240,
             }}
           >
-            <Deposits totalVotes={totalVotes} history={history} />
+            <VotesInfo totalVotes={totalVotes} history={history} />
           </Paper>
         </Grid>
         <Grid item xs={12}>

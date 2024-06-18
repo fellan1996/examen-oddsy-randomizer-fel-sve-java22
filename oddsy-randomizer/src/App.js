@@ -1,5 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import Dashboard from "./modules/Dashboard.js";
 import { db } from "./firebase.js";
 import {
@@ -9,7 +11,12 @@ import {
   getDocs,
   deleteDoc,
 } from "@firebase/firestore";
-import { ThemeProvider, styled, createTheme, responsiveFontSizes } from "@mui/material/styles";
+import {
+  ThemeProvider,
+  styled,
+  createTheme,
+  responsiveFontSizes,
+} from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -23,9 +30,7 @@ import Badge from "@mui/material/Badge";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import {
-  initialBattlefieldSetup,
-} from "./modules/listItems";
+import { initialBattlefieldSetup } from "./modules/listItems";
 import Arena from "./modules/Arena.jsx";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -34,7 +39,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import CssBaseline from "@mui/material/CssBaseline";
 import Avatar from "@mui/material/Avatar";
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
 const drawerWidth = 240;
 
@@ -85,17 +90,17 @@ const Drawer = styled(MuiDrawer, {
 const theme = createTheme();
 // theme = responsiveFontSizes(theme);
 theme.typography.h1 = {
-  fontSize: '4.2rem',
-  '@media (min-width:500px)': {
-    fontSize: '2.5rem',
+  fontSize: "4.2rem",
+  "@media (min-width:500px)": {
+    fontSize: "2.5rem",
   },
-  '@media (min-width:900px)': {
-    fontSize: '3.5rem',
+  "@media (min-width:900px)": {
+    fontSize: "3.5rem",
   },
-  '@media (min-width:1100px)': {
-    fontSize: '4.5rem',
+  "@media (min-width:1100px)": {
+    fontSize: "4.5rem",
   },
-}
+};
 
 export default function App() {
   const [totalVotes, setTotalVotes] = React.useState(0);
@@ -104,25 +109,44 @@ export default function App() {
   const [pageToShow, setPageToShow] = React.useState("creator");
   const [open, setOpen] = React.useState(true);
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+  const [snackbarIsOpen, setSnackbarIsOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  async function handleBattle(challengerOne, challengerTwo, challengerOneOdds) {
+  async function handleBattle(challengerOne, challengerTwo, challengerOneWon) {
     try {
-      const randomResult = Math.random() * 100;
+      setSnackbarIsOpen(true);
+      challengerOneWon
+        ? setSnackbarMessage(
+            challengerOne.name +
+              " won and got " +
+              challengerTwo.votes +
+              " more votes!"
+          )
+        : setSnackbarMessage(
+            challengerTwo.name +
+              " won and got " +
+              challengerOne.votes +
+              " more votes!"
+          );
       const announceAWinner = candidatesData.length === 2;
-      console.log(
-        `${challengerOne.name} -- ${challengerOneOdds} -- ${randomResult}`
-      );
-      const challengerOneWon = randomResult < challengerOneOdds;
       announceAWinner ? setDialogOpen(true) : setDialogOpen(false);
 
       if (challengerOneWon) {
-        await handleSubmitNewVotes(challengerOne.name, challengerTwo.votes, false);
+        await handleSubmitNewVotes(
+          challengerOne.name,
+          challengerTwo.votes,
+          false
+        );
         await handleDeleteCandidate(challengerTwo.name);
       } else {
-        await handleSubmitNewVotes(challengerTwo.name, challengerOne.votes, false);
+        await handleSubmitNewVotes(
+          challengerTwo.name,
+          challengerOne.votes,
+          false
+        );
         await handleDeleteCandidate(challengerOne.name);
       }
     } catch (error) {
@@ -130,9 +154,13 @@ export default function App() {
     }
   }
 
-  // const handleSetBattlefield = () => {
-  //   setInitBattlefieldArr(initialBattlefieldSetup(candidatesData));
-  // };
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackbarIsOpen(false);
+  };
 
   const updateTotalVotes = (tempCandidatesData) => {
     let sumOfVotes = 0;
@@ -158,7 +186,11 @@ export default function App() {
       console.log(e);
     }
   };
-  const handleSubmitNewVotes = async (selectedCandidateName, addedVotes, shouldUpdateCandidatesData) => {
+  const handleSubmitNewVotes = async (
+    selectedCandidateName,
+    addedVotes,
+    shouldUpdateCandidatesData
+  ) => {
     const selectedCandidateObj = candidatesData.find(
       (candidateData) => candidateData.name === selectedCandidateName
     );
@@ -172,7 +204,7 @@ export default function App() {
     } catch (e) {
       console.log(e);
     }
-    if(shouldUpdateCandidatesData) {
+    if (shouldUpdateCandidatesData) {
       await updateCandidatesData();
     }
 
@@ -206,6 +238,21 @@ export default function App() {
           open={open}
           color={pageToShow === "arena" ? "warning" : "primary"}
         >
+          <Snackbar
+            open={snackbarIsOpen}
+            autoHideDuration={4000}
+            onClose={handleClose}
+            sx={{ zIndex: 40 }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              variant="filled"
+              sx={{ width: "100%" }}
+            >
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
           <Toolbar
             sx={{
               pr: "24px", // keep right padding when drawer closed
@@ -314,45 +361,49 @@ export default function App() {
           )}
         </Box>
       </Box>
-      {candidatesData.length === 1 && <Dialog open={!!dialogOpen} onClose={() => setDialogOpen(false)}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            minWidth: 250,
-            minHeight: 250,
-            padding: 7,
-            boxShadow: "inset 0 0 15px 15px orange",
-          }}
-        >
-          <Avatar 
-          src="https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Ftrophy.png?alt=media&token=1b643f01-0da9-4ee8-86f7-c9c9f795e4cc"
-          alt="trophy"
-          variant="square"
-          sx={{
-            width: 180,
-            height: 180
-          }}
-          />
-          <Typography variant="h2" color="success">
-            <EmojiEventsIcon />Winner<EmojiEventsIcon />
-          </Typography>
-          <Avatar
-            src={candidatesData[0].picture}
-            alt={candidatesData[0].name + " picture"}
+      {candidatesData.length === 1 && (
+        <Dialog open={!!dialogOpen} onClose={() => setDialogOpen(false)}>
+          <Box
             sx={{
-              width: 180,
-              height: 180,
-              borderRadius: 100,
-              boxShadow: "0 0 15px orange",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              minWidth: 250,
+              minHeight: 250,
+              padding: 7,
+              boxShadow: "inset 0 0 15px 15px orange",
             }}
-          />
-          <Typography variant="h2" color="success">
-            {candidatesData[0].name}
-          </Typography>
-        </Box>
-      </Dialog>}
+          >
+            <Avatar
+              src="https://firebasestorage.googleapis.com/v0/b/oddsy-randomizer.appspot.com/o/images%2Ftrophy.png?alt=media&token=1b643f01-0da9-4ee8-86f7-c9c9f795e4cc"
+              alt="trophy"
+              variant="square"
+              sx={{
+                width: 180,
+                height: 180,
+              }}
+            />
+            <Typography variant="h2" color="success">
+              <EmojiEventsIcon />
+              Winner
+              <EmojiEventsIcon />
+            </Typography>
+            <Avatar
+              src={candidatesData[0].picture}
+              alt={candidatesData[0].name + " picture"}
+              sx={{
+                width: 180,
+                height: 180,
+                borderRadius: 100,
+                boxShadow: "0 0 15px orange",
+              }}
+            />
+            <Typography variant="h2" color="success">
+              {candidatesData[0].name}
+            </Typography>
+          </Box>
+        </Dialog>
+      )}
     </ThemeProvider>
   );
 }

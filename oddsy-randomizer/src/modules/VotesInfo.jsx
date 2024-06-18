@@ -1,16 +1,8 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Title from './Title.js';
-import { Label } from '@mui/icons-material';
 
-
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-export default function Deposits({ totalVotes, history }) {
-
-
+export default function VotesInfo({ totalVotes, history }) {
 
   return (
     <React.Fragment>
