@@ -30,7 +30,7 @@ export default function Form({ currentCandidates, handleSubmitNewVotes, openNewC
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          handleSubmitNewVotes(selectedCandidate, votesToBeAdded);
+          handleSubmitNewVotes(selectedCandidate, votesToBeAdded, true);
         }}
       >
         <FormControl

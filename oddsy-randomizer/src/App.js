@@ -119,10 +119,10 @@ export default function App() {
       announceAWinner ? setDialogOpen(true) : setDialogOpen(false);
 
       if (challengerOneWon) {
-        await handleSubmitNewVotes(challengerOne.name, challengerTwo.votes);
+        await handleSubmitNewVotes(challengerOne.name, challengerTwo.votes, false);
         await handleDeleteCandidate(challengerTwo.name);
       } else {
-        await handleSubmitNewVotes(challengerTwo.name, challengerOne.votes);
+        await handleSubmitNewVotes(challengerTwo.name, challengerOne.votes, false);
         await handleDeleteCandidate(challengerOne.name);
       }
     } catch (error) {
@@ -158,7 +158,7 @@ export default function App() {
       console.log(e);
     }
   };
-  const handleSubmitNewVotes = async (selectedCandidateName, addedVotes) => {
+  const handleSubmitNewVotes = async (selectedCandidateName, addedVotes, shouldUpdateCandidatesData) => {
     const selectedCandidateObj = candidatesData.find(
       (candidateData) => candidateData.name === selectedCandidateName
     );
@@ -172,7 +172,9 @@ export default function App() {
     } catch (e) {
       console.log(e);
     }
-    await updateCandidatesData();
+    if(shouldUpdateCandidatesData) {
+      await updateCandidatesData();
+    }
 
     const tempHistory = history;
     tempHistory.unshift(

@@ -24,6 +24,7 @@ export default function NewCandidateModal({
   modalIsOpen,
   closeModal,
   updateCandidatesData,
+  openSnackbar,
 }) {
   const [candidateImageURL, setCandidateImageURL] = React.useState("");
   const [newCandidateName, setNewCandidateName] = React.useState("");
@@ -58,13 +59,11 @@ export default function NewCandidateModal({
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      //skapa errormeddelande
       setNotifyUserAlreadyExists(true);
-      console.log("candidate already exists");
     } else {
       const docData = {
         picture: candidateImageURL,
-        votes: 0,
+        votes: 1,
         created: Timestamp.fromDate(new Date()),
       };
       await setDoc(doc(db, "candidates", newCandidateName), docData);
@@ -73,10 +72,10 @@ export default function NewCandidateModal({
       setNewCandidateName("");
       updateCandidatesData();
       closeModal();
-
-      //CandidatesData i App.js ska nu uppdateras och modalen ska stängas samt ett success-meddelande ska visas
+      openSnackbar(newCandidateName);
     }
   }
+
 
   return (
     <Modal
