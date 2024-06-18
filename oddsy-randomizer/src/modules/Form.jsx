@@ -39,6 +39,7 @@ export default function Form({ currentCandidates, handleSubmitNewVotes, openNewC
             display: "flex",
             flexDirection: "row",
             gap: "15px",
+            flexWrap: "wrap",
           }}
         >
           <Box sx={{ minWidth: 120 }}>

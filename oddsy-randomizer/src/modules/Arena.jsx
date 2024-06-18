@@ -85,8 +85,7 @@ export default function Arena({ candidatesData, handleBattle }) {
             ))
           ) : (
             <Typography sx={{ mt: 10 }}>
-              Add at least two candidates on the creator page and give them
-              votes in order to fight
+              Add at least two candidates on the creator page in order to fight
             </Typography>
           )}
         </Stack>
