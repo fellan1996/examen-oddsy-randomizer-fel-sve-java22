@@ -1,15 +1,12 @@
 import React from "react";
-import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 
-import Button from "@mui/material/Button";
 import BattleBox from "./BattleBox";
 import ArenaCandidate from "./ArenaCandidate";
 import { initialBattlefieldSetup } from "./listItems";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 
 export default function Arena({ candidatesData, handleBattle }) {
   const [challengerOne, setChallengerOne] = React.useState({});

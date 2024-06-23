@@ -1,8 +1,8 @@
-import * as React from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import Dashboard from "./modules/Dashboard.js";
+import Creator from "./modules/Creator.jsx";
 import { db } from "./firebase.js";
 import {
   collection,
@@ -15,7 +15,6 @@ import {
   ThemeProvider,
   styled,
   createTheme,
-  responsiveFontSizes,
 } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -25,12 +24,8 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import Badge from "@mui/material/Badge";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import { initialBattlefieldSetup } from "./modules/listItems";
 import Arena from "./modules/Arena.jsx";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -330,7 +325,7 @@ export default function App() {
         >
           <Toolbar />
           {pageToShow === "creator" ? (
-            <Dashboard
+            <Creator
               totalVotes={totalVotes}
               pageToShow={pageToShow}
               candidatesData={candidatesData}

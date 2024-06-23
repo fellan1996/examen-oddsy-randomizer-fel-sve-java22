@@ -1,20 +1,16 @@
 import Modal from "@mui/material/Modal";
 import ImageCropper from "./ImageCropper";
-import React, { useEffect } from "react";
+import React from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 import Fade from "@mui/material/Fade";
-import { styled } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Typography from "@mui/material/Typography";
 import Title from "./Title";
 import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import IconButton from "@mui/material/IconButton";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "../firebase";
@@ -34,7 +30,7 @@ export default function NewCandidateModal({
 
   const style = {
     position: "absolute",
-    top: "40%",
+    top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 400,
@@ -75,6 +71,11 @@ export default function NewCandidateModal({
       openSnackbar(newCandidateName);
     }
   }
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  };
 
 
   return (
@@ -119,6 +120,7 @@ export default function NewCandidateModal({
               required
               value={newCandidateName}
               onChange={(e) => setNewCandidateName(e.target.value)}
+              onKeyDown={handleKeyDown}
               type="text"
               size="small"
               sx={{ maxWidth: 220 }}

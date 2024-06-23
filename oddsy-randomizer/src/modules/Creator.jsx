@@ -12,7 +12,7 @@ import VotesInfo from "./VotesInfo";
 
 
 
-export default function Dashboard({
+export default function Creator({
   totalVotes,
   candidatesData,
   handleSubmitNewVotes,

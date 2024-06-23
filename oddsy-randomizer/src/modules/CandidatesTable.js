@@ -9,17 +9,7 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Avatar from '@mui/material/Avatar';
 
-// Generate Order Data
-
-
 export default function CandidatesTable({ candidatesData, deleteCandidate }) {
-
-  function handleDelete(e) {
-    e.preventDefault();
-    //add an alert to make sure that the user intended to press this button
-    deleteCandidate(e);
-
-  }
 
   return (
     <React.Fragment>
